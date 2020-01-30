@@ -32,13 +32,9 @@ Todo usuario podrá acceder a la página y realizar la compra de entradas sin ne
 
 - Vendedor: Hereda de la clase usuario, posee funciones para añadir eventos, modificar los eventos que ha creado y ver la lista de estos.
 
-- Login: Los usuarios de la página se almacenan en esta clase, se encarga de autenticar al usuario y de gestionar los nuevos registros.
-
 - Evento: Está compuesto por el nombre, lugar, fecha, datos extras y la compañía a la que pertenece, junto con las entradas disponibles.
 
 - Entrada: En esta clase se almacena la posición (butaca) del evento, junto con su precio. También se relaciona con el evento al que pertenece.
-
-- Almacén de eventos: Se encarga de guardar los eventos disponibles y devuelve la lista de estos filtrada para los métodos necesarios.
 
 ## Equipo<a name="equipo"></a>
 [Trello](https://trello.com/b/EhPCgI2B/dad)
