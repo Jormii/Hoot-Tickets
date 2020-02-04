@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Event Page</title>
+</head>
+
+<body>
+	<h1>{{eventName}}</h1>
+	<h3>Summary</h3>
+	<h4>{{eventSummary}}</h4>
+	<p></p>
+	<h5>Description</h5>
+	<h6>{{eventDescription}}</h6>
+	<h5>Days available</h5>
+	{{#eventDaysList}}
+	<table>
+		<tr>
+			<td>{{timeAndLocation}}</td>
+			<td><a href="/non_existent_url">Buy tickets</a></td>
+		</tr>
+	</table>
+	{{/eventDaysList}}
+	{{^eventDaysList}}
+	<p>No days available yet</p>
+	{{/eventDaysList}}
+</body>
+
+</html>
