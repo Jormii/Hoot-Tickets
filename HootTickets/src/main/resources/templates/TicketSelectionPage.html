@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+	<h1>{{eventName}}</h1>
+	<h3>Summary</h3>
+	<p>{{eventSummary}}</p>
+	<p></p>
+	<h3>{{timeAndLocation}}</h3>
+	<h5>Seats available</h5>
+	{{#seatsList}}
+	<table>
+		<tr>
+			<td>{{availableSeats}}/{{totalSeats}}</td>
+			<td>Price: {{seatPrice}}</td>
+
+			<td><p>How many?</p></td>
+			<td>
+				<form>
+					<input type="text">
+				</form>
+			</td>
+		</tr>
+	</table>
+	
+	<!-- TODO: Crear un único botón -->
+	<form action="submit">
+		<button type="submit" formaction="/ticketcheckout">Proceed to
+			check-out</button>
+	</form>
+	
+	{{/seatsList}}
+	{{^seatsList}}
+	<p>No days available yet</p>
+	{{/seatsList}}
+</body>
+
+</html>
