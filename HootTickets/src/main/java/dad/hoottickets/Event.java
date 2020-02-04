@@ -7,7 +7,7 @@ public class Event {
 
 	public final int ID;
 	public final int SELLER_ID;
-	public final String EVENT_NAME;
+	private String EVENT_NAME;
 	public final String EVENT_SUMMARY;
 	public final String EVENT_DESCRIPTION;
 	private List<TimeAndLocation> timeAndLocations;
@@ -37,6 +37,39 @@ public class Event {
 
 		timeAndLocations.remove(timeAndLocation);
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ID;
+		result = prime * result + SELLER_ID;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Event other = (Event) obj;
+		if (ID != other.ID)
+			return false;
+		if (SELLER_ID != other.SELLER_ID)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		String header = String.format("Event with ID %d, organized by seller with ID %d", ID, SELLER_ID);
+		String eventDescription = String.format("%s\nSummary: %s\nDescription: %s", EVENT_NAME, EVENT_SUMMARY, EVENT_DESCRIPTION);
+		String dates = String.format("Taking place these days: ", timeAndLocations);
+		return String.format("%s\n%s\n%s", header, eventDescription, dates);
 	}
 
 }
