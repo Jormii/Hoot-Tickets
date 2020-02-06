@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+	<h5>Nombre del evento a continuación</h5>
+	<p>{{eventName}}</p>
+	
+	<h5>El evento tiene lugar el siguiente día y lugar</h5>
+	<p>{{timeAndLocation}}
+	
+	<h5>Entradas seleccionadas a continuación</h5>
+	<table>
+		{{#seatsSelected}}
+		<tr>
+			<td>TODO: Aquí tendría que figurar el nombre de la entrada</td>
+			<td>{{seatPrice}}</td>
+			<td>TODO: Aquí tendría que figurar cuántas de este tipo ha comprado</td>
+		</tr>
+		{{/seatsSelected}}
+	</table>
+	
+	<p></p>
+	<form action="complete_checkout">
+		<table>
+			<tr>
+				<td>Número de tarjeta</td>
+				<td><input type="text" name="creditcardnumber"></td>
+			</tr>
+			<tr>
+				<td>CVV</td>
+				<td><input type="text" name="cvv"></td>
+			</tr>
+		</table>
+		
+		<button type="submit">Complete check-out</button>
+	</form>
+	
+<body>
+
+</body>
+
+</html>
