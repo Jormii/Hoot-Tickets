@@ -43,4 +43,17 @@ public class DummyController {
 		return TemplatesAttributes.TicketSelectionPage.TEMPLATE_NAME;
 	}
 
+	@RequestMapping("/dummyCheckoutPage")
+	private String checkoutPage(Model model) {
+		String eventName = "Nombre del evento";
+		TimeAndLocation eventTimeAndLocation = new TimeAndLocation(new Date(), "Lugar");
+		List<Seat> seatsSelected = Arrays.asList(new Seat(10, 10, 10), new Seat(20, 20, 20));
+
+		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_TIME_AND_LOCATION_ATTR, eventTimeAndLocation);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.SEATS_SELECTED_ATTR, seatsSelected);
+
+		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
+	}
+
 }

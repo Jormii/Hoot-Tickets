@@ -10,7 +10,6 @@ public class TemplatesAttributes {
 		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
 		public static final String EVENT_DESCRIPTION_ATTR = "eventDescription";
 		public static final String EVENT_DAYS_LIST_ATTR = "eventDaysList";
-
 	}
 
 	public static class TicketSelectionPage {
@@ -21,7 +20,15 @@ public class TemplatesAttributes {
 		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
 		public static final String EVENT_TIME_AND_LOCATION_ATTR = "timeAndLocation";
 		public static final String SEATS_LIST_ATTR = "seatsList";
-
+	}
+	
+	public static class CheckoutPage {
+		
+		public static final String TEMPLATE_NAME = "CheckoutPage";
+		
+		public static final String EVENT_NAME_ATTR = "eventName";
+		public static final String EVENT_TIME_AND_LOCATION_ATTR = "timeAndLocation";
+		public static final String SEATS_SELECTED_ATTR = "seatsSelected";
 	}
 
 }
