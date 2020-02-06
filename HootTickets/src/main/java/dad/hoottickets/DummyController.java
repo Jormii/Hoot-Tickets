@@ -56,4 +56,9 @@ public class DummyController {
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}
 
+	@RequestMapping("/dummyFinishedCheckoutPage")
+	private String finishedCheckoutPage(Model model) {
+		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
+	}
+
 }
