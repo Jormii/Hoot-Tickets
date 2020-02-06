@@ -27,17 +27,12 @@
 			</td>
 		</tr>
 	</table>
+	{{/seatsList}}
 	
-	<!-- TODO: Crear un único botón -->
 	<form action="submit">
 		<button type="submit" formaction="/ticketcheckout">Proceed to
 			check-out</button>
 	</form>
-	
-	{{/seatsList}}
-	{{^seatsList}}
-	<p>No days available yet</p>
-	{{/seatsList}}
 </body>
 
 </html>
