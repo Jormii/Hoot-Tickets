@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.EventRepository;
+import dad.hoottickets.database.Seller;
 import dad.hoottickets.database.Showing;
 import dad.hoottickets.database.ShowingID;
 import dad.hoottickets.database.ShowingRepository;
@@ -42,15 +43,37 @@ public class HootTicketsController {
 
 	@PostConstruct
 	public void init() {
+		String userUsername = "Nombre de usuario del usuario";
+		String userEmail = "Correo del usuario";
+		String userName = "Nombre del usuario";
+		String userSurname = "Apellido del usuario";
+		String userPassword = "Contraseña del usuario";
+		User user = new User(userUsername, userEmail, userName, userSurname, userPassword);
+
+		userRepository.save(user);
+
+		String sellerUsername = "Nombre de usuario del vendedor";
+		String sellerEmail = "Correo del vendedor";
+		String sellerName = "Nombre del vendedor";
+		String sellerSurname = "Apellido del vendedor";
+		String sellerPassword = "Contraseña del vendedor";
+		Seller seller = new Seller(sellerUsername, sellerEmail, sellerName, sellerSurname, sellerPassword);
+
+		userRepository.save(seller);
+
 		int eventID = 0;
 		String eventName = "Nombre evento";
 		String eventSummary = "Resumen evento";
 		String eventDescription = "Descripción evento";
-		Event event = new Event(eventID, eventName, eventSummary, eventDescription);
+		Event event = new Event(eventID, eventName, eventSummary, eventDescription, seller);
+
+		eventRepository.save(event);
 
 		ShowingID showingID = new ShowingID(new Date(), eventID);
 		String showingPlace = "Lugar de la sesion";
 		Showing showing = new Showing(showingID, showingPlace);
+
+		showingRepository.save(showing);
 
 		String ticketName = "Nombre de la entrada";
 		TicketID ticketID = new TicketID(ticketName, showingID);
@@ -59,17 +82,7 @@ public class HootTicketsController {
 		int ticketAvailableSeats = 40;
 		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats, ticketAvailableSeats);
 
-		String userUsername = "Nombre de usuario";
-		String userEmail = "Correo del usuario";
-		String userName = "Nombre del usuario";
-		String userSurname = "Apellido del usuario";
-		String userPassword = "Contraseña del usuario";
-		User user = new User(userUsername, userEmail, userName, userSurname, userPassword);
-
-		eventRepository.save(event);
-		showingRepository.save(showing);
 		ticketRepository.save(ticket);
-		userRepository.save(user);
 	}
 
 	/*

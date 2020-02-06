@@ -27,24 +27,25 @@ public class Event {
 	@Column(nullable = true)
 	private String eventDescription;
 
-	/*
 	@ManyToOne()
-	@JoinColumn(name = "userUsername")
+	@JoinColumn(name = "sellerEvents")
 	private Seller eventSeller;
 
-	@OneToMany(mappedBy = "showingID.showingEventID")
-	private List<Showing> eventShowings;
-	*/
+	/*
+	 * @OneToMany(mappedBy = "showingID.showingEventID") private List<Showing>
+	 * eventShowings;
+	 */
 
 	public Event() {
 
 	}
 
-	public Event(int eventID, String eventName, String eventSummary, String eventDescription) {
+	public Event(int eventID, String eventName, String eventSummary, String eventDescription, Seller eventSeller) {
 		this.eventID = eventID;
 		this.eventName = eventName;
 		this.eventSummary = eventSummary;
 		this.eventDescription = eventDescription;
+		this.eventSeller = eventSeller;
 	}
 
 	/*
@@ -81,6 +82,14 @@ public class Event {
 
 	public void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
+	}
+
+	public Seller getEventSeller() {
+		return eventSeller;
+	}
+
+	public void setEventSeller(Seller eventSeller) {
+		this.eventSeller = eventSeller;
 	}
 
 }
