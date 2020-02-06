@@ -1,10 +1,14 @@
 package dad.hoottickets.database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Showing {
@@ -15,11 +19,8 @@ public class Showing {
 	@Column(nullable = false)
 	private String showingPlace;
 
-	// TODO: Produce error
-	/*
-	 * @OneToMany(mappedBy = "ticketID.ticketShowingID") private List<Ticket>
-	 * showingTickets;
-	 */
+	@OneToMany(mappedBy = "ticketID.ticketShowing")
+	private List<Ticket> showingTickets = new ArrayList<>();
 
 	public Showing() {
 
@@ -48,6 +49,14 @@ public class Showing {
 
 	public void setShowingPlace(String showingPlace) {
 		this.showingPlace = showingPlace;
+	}
+
+	public List<Ticket> getShowingTickets() {
+		return showingTickets;
+	}
+
+	public void setShowingTickets(List<Ticket> showingTickets) {
+		this.showingTickets = showingTickets;
 	}
 
 }

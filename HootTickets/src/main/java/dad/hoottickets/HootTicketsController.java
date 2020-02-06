@@ -76,7 +76,7 @@ public class HootTicketsController {
 		showingRepository.save(showing);
 
 		String ticketName = "Nombre de la entrada";
-		TicketID ticketID = new TicketID(ticketName, showingID);
+		TicketID ticketID = new TicketID(ticketName, showing);
 		int ticketPrice = 10;
 		int ticketTotalSeats = 100;
 		int ticketAvailableSeats = 40;

@@ -30,12 +30,6 @@ public class Ticket {
 	@Column(nullable = false)
 	private int ticketAvailableSeats;
 
-	/*
-	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "showingID.showinDate"), @JoinColumn(name = "showingID.showingEventID") })
-	private Showing showing;
-	*/
-
 	// TODO: Produce error
 	/*
 	 * @ManyToMany(mappedBy = "userUsername") private List<User> ticketBuyers;

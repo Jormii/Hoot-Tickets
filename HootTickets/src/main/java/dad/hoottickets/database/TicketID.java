@@ -4,20 +4,29 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class TicketID implements Serializable {
 
 	private String ticketName;
-	private ShowingID ticketShowingID;
+
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name = "showingID.showinDate"),
+		@JoinColumn(name = "showingID.showingEventID")
+	})
+	private Showing ticketShowing;
 
 	public TicketID() {
 
 	}
 
-	public TicketID(String ticketName, ShowingID ticketShowingID) {
+	public TicketID(String ticketName, Showing ticketShowing) {
 		this.ticketName = ticketName;
-		this.ticketShowingID = ticketShowingID;
+		this.ticketShowing = ticketShowing;
 	}
 
 	/*
@@ -29,7 +38,7 @@ public class TicketID implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((ticketName == null) ? 0 : ticketName.hashCode());
-		result = prime * result + ((ticketShowingID == null) ? 0 : ticketShowingID.hashCode());
+		result = prime * result + ((ticketShowing == null) ? 0 : ticketShowing.hashCode());
 		return result;
 	}
 
@@ -47,10 +56,10 @@ public class TicketID implements Serializable {
 				return false;
 		} else if (!ticketName.equals(other.ticketName))
 			return false;
-		if (ticketShowingID == null) {
-			if (other.ticketShowingID != null)
+		if (ticketShowing == null) {
+			if (other.ticketShowing != null)
 				return false;
-		} else if (!ticketShowingID.equals(other.ticketShowingID))
+		} else if (!ticketShowing.equals(other.ticketShowing))
 			return false;
 		return true;
 	}
@@ -67,12 +76,12 @@ public class TicketID implements Serializable {
 		this.ticketName = ticketName;
 	}
 
-	public ShowingID getTicketShowingID() {
-		return ticketShowingID;
+	public Showing getTicketShowing() {
+		return ticketShowing;
 	}
 
-	public void setTicketShowingID(ShowingID ticketShowingID) {
-		this.ticketShowingID = ticketShowingID;
+	public void setTicketShowing(Showing ticketShowing) {
+		this.ticketShowing = ticketShowing;
 	}
 
 }
