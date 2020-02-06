@@ -4,20 +4,22 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class ShowingID implements Serializable {
 
 	private Date showingDate;
-	private int showingEventID;
+	private Event showingEvent;
 
 	public ShowingID() {
 
 	}
 
-	public ShowingID(Date showingDate, int showingEventID) {
+	public ShowingID(Date showingDate, Event showingEvent) {
 		this.showingDate = showingDate;
-		this.showingEventID = showingEventID;
+		this.showingEvent = showingEvent;
 	}
 
 	/*
@@ -29,7 +31,7 @@ public class ShowingID implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((showingDate == null) ? 0 : showingDate.hashCode());
-		result = prime * result + showingEventID;
+		result = prime * result + ((showingEvent == null) ? 0 : showingEvent.hashCode());
 		return result;
 	}
 
@@ -47,7 +49,10 @@ public class ShowingID implements Serializable {
 				return false;
 		} else if (!showingDate.equals(other.showingDate))
 			return false;
-		if (showingEventID != other.showingEventID)
+		if (showingEvent == null) {
+			if (other.showingEvent != null)
+				return false;
+		} else if (!showingEvent.equals(other.showingEvent))
 			return false;
 		return true;
 	}
@@ -64,12 +69,12 @@ public class ShowingID implements Serializable {
 		this.showingDate = showingDate;
 	}
 
-	public int getShowingEventID() {
-		return showingEventID;
+	public Event getShowingEvent() {
+		return showingEvent;
 	}
 
-	public void setShowingEventID(int showingEventID) {
-		this.showingEventID = showingEventID;
+	public void setShowingEvent(Event showingEvent) {
+		this.showingEvent = showingEvent;
 	}
 
 }

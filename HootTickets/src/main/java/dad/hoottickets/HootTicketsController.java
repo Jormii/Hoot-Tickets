@@ -69,9 +69,9 @@ public class HootTicketsController {
 
 		eventRepository.save(event);
 
-		ShowingID showingID = new ShowingID(new Date(), eventID);
+		ShowingID showingID = new ShowingID(new Date(), event);
 		String showingPlace = "Lugar de la sesion";
-		Showing showing = new Showing(showingID, showingPlace);
+		Showing showing = new Showing(showingID, showingPlace, event);
 
 		showingRepository.save(showing);
 
