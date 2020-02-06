@@ -15,10 +15,6 @@ public class Showing {
 	@Column(nullable = false)
 	private String showingPlace;
 
-	@ManyToOne()
-	@JoinColumn(name = "eventShowings")
-	private Event showingEvent;
-
 	// TODO: Produce error
 	/*
 	 * @OneToMany(mappedBy = "ticketID.ticketShowingID") private List<Ticket>
@@ -29,10 +25,9 @@ public class Showing {
 
 	}
 
-	public Showing(ShowingID showingID, String showingPlace, Event showingEvent) {
+	public Showing(ShowingID showingID, String showingPlace) {
 		this.showingID = showingID;
 		this.showingPlace = showingPlace;
-		this.showingEvent = showingEvent;
 	}
 
 	/*

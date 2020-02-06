@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 public class ShowingID implements Serializable {
 
 	private Date showingDate;
+
+	@ManyToOne()
+	@JoinColumn(name = "eventShowings")
 	private Event showingEvent;
 
 	public ShowingID() {

@@ -31,7 +31,7 @@ public class Event {
 	@JoinColumn(name = "sellerEvents")
 	private Seller eventSeller;
 
-	@OneToMany(mappedBy = "showingID.showingEventID")
+	@OneToMany(mappedBy = "showingID.showingEvent")
 	private List<Showing> eventShowings;
 
 	public Event() {
@@ -88,6 +88,14 @@ public class Event {
 
 	public void setEventSeller(Seller eventSeller) {
 		this.eventSeller = eventSeller;
+	}
+
+	public List<Showing> getEventShowings() {
+		return eventShowings;
+	}
+
+	public void setEventShowings(List<Showing> eventShowings) {
+		this.eventShowings = eventShowings;
 	}
 
 }
