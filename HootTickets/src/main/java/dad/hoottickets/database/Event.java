@@ -27,12 +27,14 @@ public class Event {
 	@Column(nullable = true)
 	private String eventDescription;
 
+	/*
 	@ManyToOne()
 	@JoinColumn(name = "userUsername")
 	private Seller eventSeller;
 
 	@OneToMany(mappedBy = "showingID.showingEventID")
 	private List<Showing> eventShowings;
+	*/
 
 	public Event() {
 
@@ -79,14 +81,6 @@ public class Event {
 
 	public void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
-	}
-
-	public Seller getEventSeller() {
-		return eventSeller;
-	}
-
-	public void setEventSeller(Seller eventSeller) {
-		this.eventSeller = eventSeller;
 	}
 
 }

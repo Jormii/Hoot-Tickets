@@ -30,9 +30,11 @@ public class Ticket {
 	@Column(nullable = false)
 	private int ticketAvailableSeats;
 
+	/*
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "showingID.showinDate"), @JoinColumn(name = "showingID.showingEventID") })
 	private Showing showing;
+	*/
 
 	// TODO: Produce error
 	/*
@@ -80,14 +82,6 @@ public class Ticket {
 
 	public void setTicketAvailableSeats(int ticketAvailableSeats) {
 		this.ticketAvailableSeats = ticketAvailableSeats;
-	}
-
-	public Showing getShowing() {
-		return showing;
-	}
-
-	public void setShowing(Showing showing) {
-		this.showing = showing;
 	}
 
 }

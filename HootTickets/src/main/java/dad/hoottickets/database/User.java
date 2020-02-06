@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected String userUsername;
 
 	@Column(unique = true, nullable = false)

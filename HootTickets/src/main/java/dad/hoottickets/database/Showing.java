@@ -15,9 +15,11 @@ public class Showing {
 	@Column(nullable = false)
 	private String showingPlace;
 
+	/*
 	@ManyToOne()
 	@JoinColumn(name = "eventID")
 	private Event showingEvent;
+	*/
 
 	// TODO: Produce error
 	/*
@@ -52,14 +54,6 @@ public class Showing {
 
 	public void setShowingPlace(String showingPlace) {
 		this.showingPlace = showingPlace;
-	}
-
-	public Event getShowingEvent() {
-		return showingEvent;
-	}
-
-	public void setShowingEvent(Event showingEvent) {
-		this.showingEvent = showingEvent;
 	}
 
 }
