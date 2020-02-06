@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<div class="container text-center">
+		<h1>Lista Sesiones</h1>
+		<table>
+		{{#sesiones}}
+ 		<tr>
+ 		<td>{{-index}}</td>
+ 		<td>{{evento.nombre}}</td>
+ 		<td>{{evento.info}}</td>
+ 		<td>{{precio}}</td>
+ 		<td>{{fecha}}</td>
+ 		<a href="/mostrarEntradas/{{idsesion}}">Ver Entradas</a>
+ 		</tr>
+ 		
+ 		{{/sesiones}}
+ </table>
+	</div>
+</body>
+</html>

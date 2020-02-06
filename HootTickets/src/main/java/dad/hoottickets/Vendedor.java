@@ -5,7 +5,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Vendedor extends Usuario{
+	@OneToMany(mappedBy = "vendedor")
 	List<Evento> eventos;
 	String organizacion;
 	public Vendedor(String n, String c,String o) {
@@ -19,7 +24,7 @@ public class Vendedor extends Usuario{
 		Collections.sort(porFecha,new Comparator<Evento>() {
 			@Override
 			public int compare(Evento e1, Evento e2) {
-				return(int)(e1.getDate().compareTo(e2.getDate()));
+				return(e1.getFecha().compareTo(e2.getFecha()));
 			}
 		});
 		return porFecha;
