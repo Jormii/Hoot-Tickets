@@ -2,6 +2,13 @@ package dad.hoottickets;
 
 public class TemplatesAttributes {
 
+	public static class HomePage {
+
+		public static final String TEMPLATE_NAME = "HomePage";
+
+		public static final String EVENTS_LIST_ATTR = "eventsList";
+	}
+
 	public static class EventPage {
 
 		public static final String TEMPLATE_NAME = "EventPage";

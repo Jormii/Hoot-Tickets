@@ -1,14 +1,11 @@
 package dad.hoottickets;
 
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,9 +94,20 @@ public class HootTicketsController {
 		ticketPurchaseRepository.save(ticketPurchase);
 	}
 
-	@RequestMapping("/testEventPage")
-	private String eventPageTest(Model model) {
-		Event event = eventRepository.findById(1).get();
+	@RequestMapping("/testHomePage")
+	public String home(Model model) {
+		List<Event> eventsList = eventRepository.findAll();
+
+		model.addAttribute(TemplatesAttributes.HomePage.EVENTS_LIST_ATTR, eventsList);
+
+		return TemplatesAttributes.HomePage.TEMPLATE_NAME;
+	}
+
+	@RequestMapping("/testEventPage/{eventID}")
+	private String eventPageTest(Model model, @PathVariable String eventID) {
+		int eventIDAsInt = Integer.parseInt(eventID);
+
+		Event event = eventRepository.findById(eventIDAsInt).get();
 		String eventName = event.getEventName();
 		String eventSummary = event.getEventSummary();
 		String eventDescription = event.getEventDescription();
@@ -114,7 +122,7 @@ public class HootTicketsController {
 	}
 
 	@RequestMapping("/testTicketSelectionPage")
-	private String ticketSelectionPage(Model model) {
+	private String ticketSelectionPage(Model model, @RequestParam String eventID, @RequestParam String showingDate) {
 		Showing showing = showingRepository.findAll().get(0);
 		String eventName = showing.getShowingID().getShowingEvent().getEventName();
 		String eventSummary = showing.getShowingID().getShowingEvent().getEventSummary();
@@ -133,13 +141,14 @@ public class HootTicketsController {
 
 	@RequestMapping("/testCheckoutPage")
 	private String checkoutPage(Model model) {
-		// TODO: La información de cuántas entradas se han elegido se tienen que recibir por HTTP
-		
+		// TODO: La información de cuántas entradas se han elegido se tienen que recibir
+		// por HTTP
+
 		Ticket ticket = ticketRepository.findAll().get(0);
 		String eventName = ticket.getTicketID().getTicketShowing().getShowingID().getShowingEvent().getEventName();
 		Date showingTime = ticket.getTicketID().getTicketShowing().getShowingID().getShowingDate();
 		String showingPlace = ticket.getTicketID().getTicketShowing().getShowingPlace();
-		
+
 		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingTime);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
@@ -153,43 +162,4 @@ public class HootTicketsController {
 		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
 	}
 
-	/*
-	 * @RequestMapping("/") public String home(Model model) { List<Event> eventos =
-	 * eventRepository.findAll();
-	 * 
-	 * model.addAttribute("eventos", eventos);
-	 * 
-	 * return "homepage"; }
-	 * 
-	 * @RequestMapping("/sesion/{num}") public String sesion(Model
-	 * model, @PathVariable String num) { System.out.print(num); Event evento =
-	 * eventRepository.findByNombre(num);
-	 * 
-	 * model.addAttribute("sesiones", evento.getSesiones());
-	 * 
-	 * return "sesiones"; }
-	 * 
-	 * @RequestMapping("/homeSortedbyName") public String homeName(Model model) {
-	 * List<Event> eventos = eventRepository.findAllByOrderByNombreDesc();
-	 * 
-	 * model.addAttribute("eventos", eventos);
-	 * 
-	 * return "homepage"; }
-	 * 
-	 * @RequestMapping("/homeSortedDate") public String homeDate(Model model) {
-	 * List<Event> eventos = eventRepository.findAllByOrderByFechaDesc(); for (Event
-	 * e : eventos) { if (e.getFecha().before(Calendar.getInstance().getTime())) {
-	 * eventos.remove(e); } } // solo muestra los eventos futuros
-	 * model.addAttribute("eventos", eventos);
-	 * 
-	 * return "homepage"; }
-	 * 
-	 * @RequestMapping("/buscarEvento") public String buscar(@RequestParam(value =
-	 * "buscar") String buscar, Model model) { Event e =
-	 * eventRepository.findByNombre(buscar);
-	 * 
-	 * model.addAttribute("eventos", e);
-	 * 
-	 * return "homepage"; }
-	 */
 }
