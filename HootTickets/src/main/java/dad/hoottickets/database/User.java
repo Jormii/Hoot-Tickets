@@ -5,10 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -29,8 +26,8 @@ public class User {
 	@Column(nullable = false)
 	protected String userPassword;
 
-	@ManyToMany
-	protected List<Ticket> userTickets = new ArrayList<>();
+	@OneToMany(mappedBy = "ticketPurchaseID.user")
+	protected List<TicketPurchase> userTickets = new ArrayList<>();
 
 	public User() {
 
@@ -86,6 +83,14 @@ public class User {
 
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
+	}
+
+	public List<TicketPurchase> getUserTickets() {
+		return userTickets;
+	}
+
+	public void setUserTickets(List<TicketPurchase> userTickets) {
+		this.userTickets = userTickets;
 	}
 
 }

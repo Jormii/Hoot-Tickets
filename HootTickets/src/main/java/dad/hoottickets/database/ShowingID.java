@@ -10,6 +10,11 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class ShowingID implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9015996705336309459L;
+
 	private Date showingDate;
 
 	@ManyToOne()

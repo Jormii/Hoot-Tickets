@@ -9,7 +9,7 @@ public class TemplatesAttributes {
 		public static final String EVENT_NAME_ATTR = "eventName";
 		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
 		public static final String EVENT_DESCRIPTION_ATTR = "eventDescription";
-		public static final String EVENT_DAYS_LIST_ATTR = "eventDaysList";
+		public static final String EVENT_SHOWINGS_LIST_ATTR = "eventShowingsList";
 	}
 
 	public static class TicketSelectionPage {

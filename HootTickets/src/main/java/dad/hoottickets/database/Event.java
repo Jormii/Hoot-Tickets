@@ -38,8 +38,7 @@ public class Event {
 
 	}
 
-	public Event(int eventID, String eventName, String eventSummary, String eventDescription, Seller eventSeller) {
-		this.eventID = eventID;
+	public Event(String eventName, String eventSummary, String eventDescription, Seller eventSeller) {
 		this.eventName = eventName;
 		this.eventSummary = eventSummary;
 		this.eventDescription = eventDescription;

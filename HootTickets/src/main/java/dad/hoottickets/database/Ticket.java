@@ -1,20 +1,12 @@
 package dad.hoottickets.database;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Ticket {
@@ -31,8 +23,8 @@ public class Ticket {
 	@Column(nullable = false)
 	private int ticketAvailableSeats;
 
-	@ManyToMany(mappedBy = "userTickets")
-	private List<User> ticketBuyers = new ArrayList<>();
+	@OneToMany(mappedBy = "ticketPurchaseID.ticket")
+	private List<TicketPurchase> ticketBuyers = new ArrayList<>();
 
 	public Ticket() {
 
@@ -44,6 +36,10 @@ public class Ticket {
 		this.ticketTotalSeats = ticketTotalSeats;
 		this.ticketAvailableSeats = ticketAvailableSeats;
 	}
+
+	/*
+	 * Getters and setters
+	 */
 
 	public TicketID getTicketID() {
 		return ticketID;
@@ -75,6 +71,14 @@ public class Ticket {
 
 	public void setTicketAvailableSeats(int ticketAvailableSeats) {
 		this.ticketAvailableSeats = ticketAvailableSeats;
+	}
+
+	public List<TicketPurchase> getTicketBuyers() {
+		return ticketBuyers;
+	}
+
+	public void setTicketBuyers(List<TicketPurchase> ticketBuyers) {
+		this.ticketBuyers = ticketBuyers;
 	}
 
 }

@@ -21,6 +21,10 @@ public class Seller extends User {
 		super(sellerUsername, sellerEmail, sellerName, sellerSurname, sellerPassword);
 	}
 
+	/*
+	 * Getters and setters
+	 */
+	
 	public List<Event> getSellerEvents() {
 		return sellerEvents;
 	}

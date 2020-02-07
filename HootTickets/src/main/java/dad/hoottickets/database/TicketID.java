@@ -11,13 +11,15 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class TicketID implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -209554282349994623L;
+
 	private String ticketName;
 
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "showingID.showinDate"),
-		@JoinColumn(name = "showingID.showingEventID")
-	})
+	@JoinColumns({ @JoinColumn(name = "showingID.showinDate"), @JoinColumn(name = "showingID.showingEventID") })
 	private Showing ticketShowing;
 
 	public TicketID() {
