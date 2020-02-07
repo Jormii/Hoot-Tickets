@@ -1,5 +1,6 @@
 package dad.hoottickets.database;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,10 +31,8 @@ public class Ticket {
 	@Column(nullable = false)
 	private int ticketAvailableSeats;
 
-	// TODO: Produce error
-	/*
-	 * @ManyToMany(mappedBy = "userUsername") private List<User> ticketBuyers;
-	 */
+	@ManyToMany(mappedBy = "userTickets")
+	private List<User> ticketBuyers = new ArrayList<>();
 
 	public Ticket() {
 

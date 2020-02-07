@@ -1,5 +1,6 @@
 package dad.hoottickets.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -28,10 +29,8 @@ public class User {
 	@Column(nullable = false)
 	protected String userPassword;
 
-	// TODO: Produce error
-	/*
-	 * @ManyToMany(mappedBy = "ticketID") private List<Ticket> userTickets;
-	 */
+	@ManyToMany
+	protected List<Ticket> userTickets = new ArrayList<>();
 
 	public User() {
 
