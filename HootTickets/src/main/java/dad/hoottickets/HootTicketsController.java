@@ -1,5 +1,6 @@
 package dad.hoottickets;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -120,30 +121,29 @@ public class HootTicketsController {
 		Date showingTime = showing.getShowingID().getShowingDate();
 		String showingPlace = showing.getShowingPlace();
 		List<Ticket> showingTickets = showing.getShowingTickets();
-		
+
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, showingTime);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TICKETS_ATTR, showingTickets);
-		
+
 		return TemplatesAttributes.TicketSelectionPage.TEMPLATE_NAME;
 	}
 
 	@RequestMapping("/testCheckoutPage")
 	private String checkoutPage(Model model) {
-		String eventName = "Nombre del evento";
-		/*
-		 * TimeAndLocation eventTimeAndLocation = new TimeAndLocation(new Date(),
-		 * "Lugar"); List<Seat> seatsSelected = Arrays.asList(new Seat(10, 10, 10), new
-		 * Seat(20, 20, 20));
-		 */
-
+		// TODO: La información de cuántas entradas se han elegido se tienen que recibir por HTTP
+		
+		Ticket ticket = ticketRepository.findAll().get(0);
+		String eventName = ticket.getTicketID().getTicketShowing().getShowingID().getShowingEvent().getEventName();
+		Date showingTime = ticket.getTicketID().getTicketShowing().getShowingID().getShowingDate();
+		String showingPlace = ticket.getTicketID().getTicketShowing().getShowingPlace();
+		
 		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
-		// model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_TIME_AND_LOCATION_ATTR,
-		// eventTimeAndLocation);
-		// model.addAttribute(TemplatesAttributes.CheckoutPage.SEATS_SELECTED_ATTR,
-		// seatsSelected);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingTime);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_ATTR, ticket);
 
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}

@@ -5,21 +5,20 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-	<h5>Nombre del evento a continuación</h5>
-	<p>{{eventName}}</p>
+	<h5>Nombre del evento: {{eventName}}</h5>
 	
-	<h5>El evento tiene lugar el siguiente día y lugar</h5>
-	<p>{{timeAndLocation}}
+	<h5>La sesión ocurre el día: {{showingTime}}</h5>
+	<h5>La sesión tiene lugar en: {{showingPlace}}</h5>
 	
 	<h5>Entradas seleccionadas a continuación</h5>
 	<table>
-		{{#seatsSelected}}
+		{{#ticketsSelected}}
 		<tr>
-			<td>TODO: Aquí tendría que figurar el nombre de la entrada</td>
-			<td>{{seatPrice}}</td>
-			<td>TODO: Aquí tendría que figurar cuántas de este tipo ha comprado</td>
+			<td>Ticket name: {{ticketID.ticketName}}</td>
+			<td>Ticket price: {{ticketPrice}}</td>
+			<td>Ticket quantity: TODO: Indicar cuántas</td> <!-- TODO: Meter cantidad elegida -->
 		</tr>
-		{{/seatsSelected}}
+		{{/ticketsSelected}}
 	</table>
 	
 	<p></p>
