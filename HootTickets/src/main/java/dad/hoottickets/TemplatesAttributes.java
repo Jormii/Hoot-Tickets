@@ -2,6 +2,13 @@ package dad.hoottickets;
 
 public class TemplatesAttributes {
 
+	public static class HomePage {
+
+		public static final String TEMPLATE_NAME = "HomePage";
+
+		public static final String EVENTS_LIST_ATTR = "eventsList";
+	}
+
 	public static class EventPage {
 
 		public static final String TEMPLATE_NAME = "EventPage";
@@ -9,7 +16,7 @@ public class TemplatesAttributes {
 		public static final String EVENT_NAME_ATTR = "eventName";
 		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
 		public static final String EVENT_DESCRIPTION_ATTR = "eventDescription";
-		public static final String EVENT_DAYS_LIST_ATTR = "eventDaysList";
+		public static final String EVENT_SHOWINGS_LIST_ATTR = "eventShowingsList";
 	}
 
 	public static class TicketSelectionPage {
@@ -18,8 +25,9 @@ public class TemplatesAttributes {
 
 		public static final String EVENT_NAME_ATTR = "eventName";
 		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
-		public static final String EVENT_TIME_AND_LOCATION_ATTR = "timeAndLocation";
-		public static final String SEATS_LIST_ATTR = "seatsList";
+		public static final String SHOWING_TIME_ATTR = "showingTime";
+		public static final String SHOWING_PLACE_ATTR = "showingPlace";
+		public static final String SHOWING_TICKETS_ATTR = "showingTicketsList";
 	}
 
 	public static class CheckoutPage {
@@ -27,8 +35,9 @@ public class TemplatesAttributes {
 		public static final String TEMPLATE_NAME = "CheckoutPage";
 
 		public static final String EVENT_NAME_ATTR = "eventName";
-		public static final String EVENT_TIME_AND_LOCATION_ATTR = "timeAndLocation";
-		public static final String SEATS_SELECTED_ATTR = "seatsSelected";
+		public static final String SHOWING_TIME_ATTR = "showingTime";
+		public static final String SHOWING_PLACE_ATTR = "showingPlace";
+		public static final String TICKETS_SELECTED_ATTR = "ticketsSelected";
 	}
 
 	public static class FinishedCheckoutPage {

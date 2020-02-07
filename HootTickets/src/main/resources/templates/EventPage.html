@@ -14,17 +14,18 @@
 	<h5>Description</h5>
 	<p>{{eventDescription}}</p>
 	<h5>Days available</h5>
-	{{#eventDaysList}}
+	{{#eventShowingsList}}
 	<table>
 		<tr>
-			<td>{{timeAndLocation}}</td>
+			<td>Time: {{showingID.showingDate}}</td>
+			<td>/ Place: {{showingPlace}}</td>
 			<td><a href="/non_existent_url">Buy tickets</a></td>
 		</tr>
 	</table>
-	{{/eventDaysList}}
-	{{^eventDaysList}}
+	{{/eventShowingsList}}
+	{{^eventShowingsList}}
 	<p>No days available yet</p>
-	{{/eventDaysList}}
+	{{/eventShowingsList}}
 </body>
 
 </html>
