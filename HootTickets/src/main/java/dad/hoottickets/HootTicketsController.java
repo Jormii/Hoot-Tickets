@@ -114,21 +114,19 @@ public class HootTicketsController {
 
 	@RequestMapping("/testTicketSelectionPage")
 	private String ticketSelectionPage(Model model) {
-		String eventName = "Nombre del evento";
-		String eventSummary = "Resumen del evento";
-		/*
-		 * TimeAndLocation timeAndLocation = new TimeAndLocation(new Date(),
-		 * "Lugar en el que se celebra"); List<Seat> seats = Arrays.asList(new Seat(50,
-		 * 20, 10), new Seat(20, 20, 100), new Seat(5, 5, 200));
-		 */
-
+		Showing showing = showingRepository.findAll().get(0);
+		String eventName = showing.getShowingID().getShowingEvent().getEventName();
+		String eventSummary = showing.getShowingID().getShowingEvent().getEventSummary();
+		Date showingTime = showing.getShowingID().getShowingDate();
+		String showingPlace = showing.getShowingPlace();
+		List<Ticket> showingTickets = showing.getShowingTickets();
+		
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
-		// model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_TIME_AND_LOCATION_ATTR,
-		// timeAndLocation);
-		// model.addAttribute(TemplatesAttributes.TicketSelectionPage.SEATS_LIST_ATTR,
-		// seats);
-
+		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, showingTime);
+		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_PLACE_ATTR, showingPlace);
+		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TICKETS_ATTR, showingTickets);
+		
 		return TemplatesAttributes.TicketSelectionPage.TEMPLATE_NAME;
 	}
 

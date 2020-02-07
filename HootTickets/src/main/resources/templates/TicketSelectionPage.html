@@ -11,13 +11,15 @@
 	<h3>Summary</h3>
 	<p>{{eventSummary}}</p>
 	<p></p>
-	<h3>{{timeAndLocation}}</h3>
+	<h3>Time: {{showingTime}}</h3>
+	<h3>Place: {{showingPlace}}</h3>
 	<h5>Seats available</h5>
-	{{#seatsList}}
+	{{#showingTicketsList}}
 	<table>
 		<tr>
-			<td>{{availableSeats}}/{{totalSeats}}</td>
-			<td>Price: {{seatPrice}}</td>
+			<td>Ticket name: {{ticketID.ticketName}}</td>
+			<td>Available/Total seats: {{ticketAvailableSeats}}/{{ticketTotalSeats}}</td>
+			<td>Ticket price: {{ticketPrice}}</td>
 
 			<td><p>How many?</p></td>
 			<td>
@@ -27,8 +29,8 @@
 			</td>
 		</tr>
 	</table>
-	{{/seatsList}}
-	
+	{{/showingTicketsList}}
+
 	<form action="submit">
 		<button type="submit" formaction="/ticketcheckout">Proceed to
 			check-out</button>

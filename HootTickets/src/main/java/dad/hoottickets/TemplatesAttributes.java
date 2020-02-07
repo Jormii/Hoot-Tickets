@@ -18,8 +18,9 @@ public class TemplatesAttributes {
 
 		public static final String EVENT_NAME_ATTR = "eventName";
 		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
-		public static final String EVENT_TIME_AND_LOCATION_ATTR = "timeAndLocation";
-		public static final String SEATS_LIST_ATTR = "seatsList";
+		public static final String SHOWING_TIME_ATTR = "showingTime";
+		public static final String SHOWING_PLACE_ATTR = "showingPlace";
+		public static final String SHOWING_TICKETS_ATTR = "showingTicketsList";
 	}
 
 	public static class CheckoutPage {
