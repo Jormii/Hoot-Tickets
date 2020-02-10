@@ -31,7 +31,7 @@ public class Event {
 	@JoinColumn(name = "sellerEvents")
 	private Seller eventSeller;
 
-	@OneToMany(mappedBy = "showingID.showingEvent")
+	@OneToMany(mappedBy = "showingEvent")
 	private List<Showing> eventShowings;
 
 	public Event() {

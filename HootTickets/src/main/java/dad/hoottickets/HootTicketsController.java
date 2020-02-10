@@ -1,5 +1,7 @@
 package dad.hoottickets;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +10,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -72,9 +75,9 @@ public class HootTicketsController {
 
 		eventRepository.save(event);
 
-		ShowingID showingID = new ShowingID(new Date(), event);
+		ShowingID showingID = new ShowingID(new Date(), event.getEventName());
 		String showingPlace = "Lugar de la sesion";
-		Showing showing = new Showing(showingID, showingPlace);
+		Showing showing = new Showing(showingID, showingPlace,event);
 
 		showingRepository.save(showing);
 
@@ -103,11 +106,12 @@ public class HootTicketsController {
 		return TemplatesAttributes.HomePage.TEMPLATE_NAME;
 	}
 
-	@RequestMapping("/testEventPage/{eventID}")
-	private String eventPageTest(Model model, @PathVariable String eventID) {
-		int eventIDAsInt = Integer.parseInt(eventID);
+	@PostMapping("/testEventPage")
+	private String eventPageTest(Model model, @RequestParam int eventID) {
+		//System.out.println(eventID);
+		//int eventIDAsInt = Integer.parseInt(eventID);
 
-		Event event = eventRepository.findById(eventIDAsInt).get();
+		Event event = eventRepository.findById(eventID).get();
 		String eventName = event.getEventName();
 		String eventSummary = event.getEventSummary();
 		String eventDescription = event.getEventDescription();
@@ -121,11 +125,13 @@ public class HootTicketsController {
 		return TemplatesAttributes.EventPage.TEMPLATE_NAME;
 	}
 
-	@RequestMapping("/testTicketSelectionPage")
-	private String ticketSelectionPage(Model model, @RequestParam String eventID, @RequestParam String showingDate) {
-		Showing showing = showingRepository.findAll().get(0);
-		String eventName = showing.getShowingID().getShowingEvent().getEventName();
-		String eventSummary = showing.getShowingID().getShowingEvent().getEventSummary();
+	@PostMapping("/testTicketSelectionPage")
+	private String ticketSelectionPage(Model model,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
+		 SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+		 Date date= formatter.parse(ShowingDate);
+		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
+		String eventName = showing.getShowingEvent().getEventName();
+		String eventSummary = showing.getShowingEvent().getEventSummary();
 		Date showingTime = showing.getShowingID().getShowingDate();
 		String showingPlace = showing.getShowingPlace();
 		List<Ticket> showingTickets = showing.getShowingTickets();
@@ -139,13 +145,15 @@ public class HootTicketsController {
 		return TemplatesAttributes.TicketSelectionPage.TEMPLATE_NAME;
 	}
 
-	@RequestMapping("/testCheckoutPage")
-	private String checkoutPage(Model model) {
-		// TODO: La información de cuántas entradas se han elegido se tienen que recibir
-		// por HTTP
+	@PostMapping("/testCheckoutPage")
+	private String checkoutPage(Model model,@RequestParam("seat[]") List<String> to) {
+		for(String number : to) {
+	        System.out.println(number);
+	    
+	
 
 		Ticket ticket = ticketRepository.findAll().get(0);
-		String eventName = ticket.getTicketID().getTicketShowing().getShowingID().getShowingEvent().getEventName();
+		String eventName = ticket.getTicketID().getTicketShowing().getShowingEvent().getEventName();
 		Date showingTime = ticket.getTicketID().getTicketShowing().getShowingID().getShowingDate();
 		String showingPlace = ticket.getTicketID().getTicketShowing().getShowingPlace();
 
@@ -153,7 +161,8 @@ public class HootTicketsController {
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingTime);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_ATTR, ticket);
-
+		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_QUA,number);
+		}
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}
 

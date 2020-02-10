@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -16,7 +18,9 @@ public class Showing {
 
 	@Column(nullable = false)
 	private String showingPlace;
-
+	@ManyToOne()
+	@JoinColumn(name = "eventShowings")
+	private Event showingEvent;
 	@OneToMany(mappedBy = "ticketID.ticketShowing")
 	private List<Ticket> showingTickets = new ArrayList<>();
 
@@ -24,9 +28,10 @@ public class Showing {
 
 	}
 
-	public Showing(ShowingID showingID, String showingPlace) {
+	public Showing(ShowingID showingID, String showingPlace,Event showingEvent) {
 		this.showingID = showingID;
 		this.showingPlace = showingPlace;
+		this.showingEvent = showingEvent;
 	}
 
 	/*
@@ -55,6 +60,14 @@ public class Showing {
 
 	public void setShowingTickets(List<Ticket> showingTickets) {
 		this.showingTickets = showingTickets;
+	}
+
+	public Event getShowingEvent() {
+		return showingEvent;
+	}
+
+	public void setShowingEvent(Event showingEvent) {
+		this.showingEvent = showingEvent;
 	}
 
 }
