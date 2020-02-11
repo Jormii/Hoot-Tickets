@@ -1,12 +1,18 @@
 package dad.hoottickets;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +37,12 @@ import dad.hoottickets.database.UserRepository;
 
 @Controller
 public class HootTicketsController {
+
+	// TODO: BORRAR
+	Seller madeUpSeller = new Seller("MadeUpSeller", "madeup@seller.com", "MadeUp", "Seller", "MyMadeUpPassword");
+
+	@Autowired
+	private ClientSession session;
 
 	@Autowired
 	private EventRepository eventRepository;
@@ -65,6 +77,7 @@ public class HootTicketsController {
 		String sellerPassword = "Contraseña del vendedor";
 		Seller seller = new Seller(sellerUsername, sellerEmail, sellerName, sellerSurname, sellerPassword);
 
+		userRepository.save(madeUpSeller);
 		userRepository.save(seller);
 
 		String eventName = "Nombre evento";
@@ -74,7 +87,9 @@ public class HootTicketsController {
 
 		eventRepository.save(event);
 
-		ShowingID showingID = new ShowingID(new Date(), event);
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 10:10:10"));
+		ShowingID showingID = new ShowingID(date, event);
 		String showingPlace = "Lugar de la sesion";
 		Showing showing = new Showing(showingID, showingPlace);
 
@@ -95,8 +110,14 @@ public class HootTicketsController {
 		ticketPurchaseRepository.save(ticketPurchase);
 	}
 
+	private void updateHTTPSession(HttpSession httpSession) {
+		if (httpSession.isNew()) {
+			session.resetSession();
+		}
+	}
+
 	@RequestMapping("/testHomePage")
-	public String home(Model model) {
+	private String home(Model model) {
 		List<Event> eventsList = eventRepository.findAll();
 
 		model.addAttribute(TemplatesAttributes.HomePage.EVENTS_LIST_ATTR, eventsList);
@@ -127,7 +148,7 @@ public class HootTicketsController {
 		Showing showing = showingRepository.findAll().get(0);
 		String eventName = showing.getShowingID().getShowingEvent().getEventName();
 		String eventSummary = showing.getShowingID().getShowingEvent().getEventSummary();
-		Date showingTime = showing.getShowingID().getShowingDate();
+		LocalDateTime showingTime = showing.getShowingID().getShowingDate();
 		String showingPlace = showing.getShowingPlace();
 		List<Ticket> showingTickets = showing.getShowingTickets();
 
@@ -147,7 +168,7 @@ public class HootTicketsController {
 
 		Ticket ticket = ticketRepository.findAll().get(0);
 		String eventName = ticket.getTicketID().getTicketShowing().getShowingID().getShowingEvent().getEventName();
-		Date showingTime = ticket.getTicketID().getTicketShowing().getShowingID().getShowingDate();
+		LocalDateTime showingTime = ticket.getTicketID().getTicketShowing().getShowingID().getShowingDate();
 		String showingPlace = ticket.getTicketID().getTicketShowing().getShowingPlace();
 
 		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
@@ -164,23 +185,24 @@ public class HootTicketsController {
 	}
 
 	@RequestMapping("/testEventCreation")
-	private String createEvent(Model model) {
+	private String createEvent(HttpSession httpSession, Model model) {
 		return TemplatesAttributes.EventCreationPage.TEMPLATE_NAME;
 	}
 
 	@PostMapping("/testShowingCreation")
-	private String createShowing(Model model, @RequestParam String eventName, @RequestParam String eventSummary,
-			@RequestParam String eventDescription, @RequestParam int showingsAmount) {
-
+	private String createShowing(HttpSession httpSession, Model model, @RequestParam String eventName,
+			@RequestParam String eventSummary, @RequestParam String eventDescription,
+			@RequestParam int showingsAmount) {
 		String templateToReturn = TemplatesAttributes.ShowingCreationPage.TEMPLATE_NAME;
 		Event alreadyExistingEvent = eventRepository.findByEventName(eventName);
 		if (alreadyExistingEvent == null) {
-			// TODO: Obtener el vendedor de la sesion
-			Event newEvent = new Event(eventName, eventSummary, eventDescription,
-					(Seller) userRepository.findById("Seller").get());
+			// TODO
+			// Seller seller = (Seller) session.getUser();
+			Seller seller = madeUpSeller;
+			Event newEvent = new Event(eventName, eventSummary, eventDescription, seller);
 
-			// TODO: Incluir esto en la sesion. No guardarlo directamente en la BBDD
-			eventRepository.save(newEvent);
+			EventCreation eventCreation = session.getEventCreation();
+			eventCreation.startEventCreation(newEvent, showingsAmount);
 
 			// TODO: Crear tantas sesiones como se ha indicado
 			model.addAttribute(TemplatesAttributes.ShowingCreationPage.EVENT_NAME_ATTR, eventName);
@@ -195,12 +217,23 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("/testTicketCreation")
-	private String createTicket(Model model, @RequestParam String showingPlace, @RequestParam String showingDate,
-			@RequestParam int showingTicketsAmount) {
+	private String createTicket(HttpSession httpSession, Model model, @RequestParam String showingPlace,
+			@RequestParam String showingDate, @RequestParam int showingTicketsAmount) {
 		model.addAttribute(TemplatesAttributes.TicketCreationPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.TicketCreationPage.SHOWING_DATE_ATTR, showingDate);
 		model.addAttribute(TemplatesAttributes.TicketCreationPage.EVENT_NAME_ATTR, "<NOMBRE EVENTO>");
 		System.out.println(showingTicketsAmount); // TODO
+
+		EventCreation eventCreation = session.getEventCreation();
+
+		// TODO: Hacer costante
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		// TODO: Recoger fecha de los argumentos
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 23:55:00"));
+		ShowingID showingID = new ShowingID(date, eventCreation.getEvent());
+		Showing newShowing = new Showing(showingID, showingPlace);
+
+		eventCreation.addShowingToEvent(newShowing, showingTicketsAmount);
 
 		return TemplatesAttributes.TicketCreationPage.TEMPLATE_NAME;
 	}
@@ -208,13 +241,35 @@ public class HootTicketsController {
 	@PostMapping("/testCompleteCreation")
 	private String completeEventCreation(Model model, @RequestParam String ticketName, @RequestParam int ticketPrice,
 			@RequestParam int ticketTotal) {
-		
+
 		// TODO
 		System.out.println(ticketName);
 		System.out.println(ticketPrice);
 		System.out.println(ticketTotal);
-		
+
+		EventCreation eventCreation = session.getEventCreation();
+		Showing showing = eventCreation.getShowings().get(0);
+		TicketID ticketID = new TicketID(ticketName, showing);
+		Ticket newTicket = new Ticket(ticketID, ticketPrice, ticketTotal);
+		eventCreation.addTicketToEvent(newTicket, showing);
+
+		saveNewEvent();
+
 		return TemplatesAttributes.EventCreatedPage.TEMPLATE_NAME;
+	}
+
+	private void saveNewEvent() {
+		EventCreation eventCreation = session.getEventCreation();
+
+		Event newEvent = eventCreation.getEvent();
+		eventRepository.save(newEvent);
+
+		List<Showing> newShowings = eventCreation.getShowings();
+		showingRepository.saveAll(newShowings);
+
+		for (List<Ticket> newTickets : eventCreation.getTickets().values()) {
+			ticketRepository.saveAll(newTickets);
+		}
 	}
 
 }

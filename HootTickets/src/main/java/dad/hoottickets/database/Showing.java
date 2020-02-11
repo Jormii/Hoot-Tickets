@@ -30,6 +30,20 @@ public class Showing {
 	}
 
 	/*
+	 * hashCode() and equals()
+	 */
+
+	@Override
+	public int hashCode() {
+		return showingID.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return showingID.equals(obj);
+	}
+
+	/*
 	 * Getters and setters
 	 */
 
