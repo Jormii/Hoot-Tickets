@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+	{{#errorMessage}}
+	<p>Error found creating the event: {{errorMessage}}</p>
+	{{/errorMessage}}
+
+	<form method="post" action="/testShowingCreation">
+		<label>Event name: </label>
+		<input type="text" name="eventName" required="required"></input>
+		<br><br>
+		<label>Event summary: </label>
+		<textarea name="eventSummary" rows="2" cols="50" required="required"></textarea>
+		<br><br>
+		<label>Event description (optional):</label>
+		<textarea name="eventDescription" rows="5" cols="50"></textarea>
+		<br><br>
+		<label>How many showings?</label>
+		<input type="number" name="showingsAmount" min="1" required="required"></input>
+		<br><br>
+		<button type="submit">Proceed to showings</button>
+	</form>
+</body>
+
+</html>

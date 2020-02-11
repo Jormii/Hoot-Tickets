@@ -45,4 +45,11 @@ public class TemplatesAttributes {
 		public static final String TEMPLATE_NAME = "FinishedCheckoutPage";
 	}
 
+	public static class EventCreationPage {
+		
+		public static final String TEMPLATE_NAME = "EventCreationPage";
+	
+		public static final String ERROR_MESSAGE_ATTR = "errorMessage";
+	}
+	
 }

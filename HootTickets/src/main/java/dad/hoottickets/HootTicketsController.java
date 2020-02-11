@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -47,7 +48,7 @@ public class HootTicketsController {
 
 	@PostConstruct
 	public void init() {
-		String userUsername = "Nombre de usuario del usuario";
+		String userUsername = "User";
 		String userEmail = "Correo del usuario";
 		String userName = "Nombre del usuario";
 		String userSurname = "Apellido del usuario";
@@ -56,7 +57,7 @@ public class HootTicketsController {
 
 		userRepository.save(user);
 
-		String sellerUsername = "Nombre de usuario del vendedor";
+		String sellerUsername = "Seller";
 		String sellerEmail = "Correo del vendedor";
 		String sellerName = "Nombre del vendedor";
 		String sellerSurname = "Apellido del vendedor";
@@ -160,6 +161,33 @@ public class HootTicketsController {
 	@RequestMapping("/testFinishedCheckoutPage")
 	private String finishedCheckoutPage(Model model) {
 		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
+	}
+
+	@RequestMapping("/testEventCreation")
+	private String createEvent(Model model) {
+		return TemplatesAttributes.EventCreationPage.TEMPLATE_NAME;
+	}
+
+	@PostMapping("/testShowingCreation")
+	private String createShowing(Model model, @RequestParam String eventName, @RequestParam String eventSummary,
+			@RequestParam String eventDescription, @RequestParam int showingsAmount) {
+
+		String templateToReturn = "/";
+		Event alreadyExistingEvent = eventRepository.findByEventName(eventName);
+		if (alreadyExistingEvent == null) {
+			// TODO: Obtener el vendedor de la sesion
+			Event newEvent = new Event(eventName, eventSummary, eventDescription,
+					(Seller) userRepository.findById("Seller").get());
+
+			// TODO: Incluir esto en la sesion. No guardarlo directamente en la BBDD
+			eventRepository.save(newEvent);
+		} else {
+			String errorMessage = "An event with this name already exists";
+			model.addAttribute(TemplatesAttributes.EventCreationPage.ERROR_MESSAGE_ATTR, errorMessage);
+			templateToReturn = TemplatesAttributes.EventCreationPage.TEMPLATE_NAME;
+		}
+
+		return templateToReturn;
 	}
 
 }
