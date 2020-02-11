@@ -1,5 +1,6 @@
 package dad.hoottickets;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -83,8 +84,7 @@ public class HootTicketsController {
 		TicketID ticketID = new TicketID(ticketName, showing);
 		int ticketPrice = 10;
 		int ticketTotalSeats = 100;
-		int ticketAvailableSeats = 40;
-		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats, ticketAvailableSeats);
+		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats);
 
 		ticketRepository.save(ticket);
 
@@ -172,7 +172,7 @@ public class HootTicketsController {
 	private String createShowing(Model model, @RequestParam String eventName, @RequestParam String eventSummary,
 			@RequestParam String eventDescription, @RequestParam int showingsAmount) {
 
-		String templateToReturn = "/";
+		String templateToReturn = TemplatesAttributes.ShowingCreationPage.TEMPLATE_NAME;
 		Event alreadyExistingEvent = eventRepository.findByEventName(eventName);
 		if (alreadyExistingEvent == null) {
 			// TODO: Obtener el vendedor de la sesion
@@ -181,13 +181,40 @@ public class HootTicketsController {
 
 			// TODO: Incluir esto en la sesion. No guardarlo directamente en la BBDD
 			eventRepository.save(newEvent);
+
+			// TODO: Crear tantas sesiones como se ha indicado
+			model.addAttribute(TemplatesAttributes.ShowingCreationPage.EVENT_NAME_ATTR, eventName);
+			model.addAttribute(TemplatesAttributes.ShowingCreationPage.SHOWINGS_AMOUNT_ATTR, showingsAmount);
 		} else {
-			String errorMessage = "An event with this name already exists";
+			String errorMessage = String.format("An event with this name (%s) already exists", eventName);
 			model.addAttribute(TemplatesAttributes.EventCreationPage.ERROR_MESSAGE_ATTR, errorMessage);
 			templateToReturn = TemplatesAttributes.EventCreationPage.TEMPLATE_NAME;
 		}
 
 		return templateToReturn;
+	}
+
+	@PostMapping("/testTicketCreation")
+	private String createTicket(Model model, @RequestParam String showingPlace, @RequestParam String showingDate,
+			@RequestParam int showingTicketsAmount) {
+		model.addAttribute(TemplatesAttributes.TicketCreationPage.SHOWING_PLACE_ATTR, showingPlace);
+		model.addAttribute(TemplatesAttributes.TicketCreationPage.SHOWING_DATE_ATTR, showingDate);
+		model.addAttribute(TemplatesAttributes.TicketCreationPage.EVENT_NAME_ATTR, "<NOMBRE EVENTO>");
+		System.out.println(showingTicketsAmount); // TODO
+
+		return TemplatesAttributes.TicketCreationPage.TEMPLATE_NAME;
+	}
+
+	@PostMapping("/testCompleteCreation")
+	private String completeEventCreation(Model model, @RequestParam String ticketName, @RequestParam int ticketPrice,
+			@RequestParam int ticketTotal) {
+		
+		// TODO
+		System.out.println(ticketName);
+		System.out.println(ticketPrice);
+		System.out.println(ticketTotal);
+		
+		return TemplatesAttributes.EventCreatedPage.TEMPLATE_NAME;
 	}
 
 }

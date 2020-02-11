@@ -30,11 +30,11 @@ public class Ticket {
 
 	}
 
-	public Ticket(TicketID ticketID, int ticketPrice, int ticketTotalSeats, int ticketAvailableSeats) {
+	public Ticket(TicketID ticketID, int ticketPrice, int ticketTotalSeats) {
 		this.ticketID = ticketID;
 		this.ticketPrice = ticketPrice;
 		this.ticketTotalSeats = ticketTotalSeats;
-		this.ticketAvailableSeats = ticketAvailableSeats;
+		this.ticketAvailableSeats = ticketTotalSeats;
 	}
 
 	/*

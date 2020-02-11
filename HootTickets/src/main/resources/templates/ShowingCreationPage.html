@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+	<p>Creating event with name {{eventName}}</p>
+	
+	<form action="/testTicketCreation" method="post">
+		<label>Where is this showing taking place?</label>
+		<input type="text" name="showingPlace" required="required">
+		<br><br>
+		<label>When? </label>
+		<input type="datetime-local" name="showingDate" required="required">
+		<br><br>
+		<label>How many types of tickets? </label>
+		<input type="number" name="showingTicketsAmount">
+		<br><br>
+		<button type="submit">Complete creation</button>
+	</form>
+</body>
+
+</html>

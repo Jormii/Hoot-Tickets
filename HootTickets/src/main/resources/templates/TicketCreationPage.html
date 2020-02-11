@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+	<p>Creating event with name {{eventName}}</p>
+	<p>Creating ticket for the showing happening {{showingPlace}}, date {{showingDate}}</p>
+	
+	<form action="/testCompleteCreation" method="post">
+		<label>How is this ticket named?</label>
+		<input type="text" name="ticketName" required="required">
+		<br><br>
+		<label>What's the price of this ticket?</label>
+		<input type="number" name="ticketPrice" required="required">
+		<br><br>
+		<label>How many of this ticket are on sale?</label>
+		<input type="number" name="ticketTotal" required="required">
+		<br><br>
+		<button type="submit">Complete event creation</button>
+	</form>
+</body>
+
+</html>

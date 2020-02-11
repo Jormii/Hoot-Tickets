@@ -52,4 +52,26 @@ public class TemplatesAttributes {
 		public static final String ERROR_MESSAGE_ATTR = "errorMessage";
 	}
 	
+	public static class ShowingCreationPage {
+		
+		public static final String TEMPLATE_NAME = "ShowingCreationPage";
+		
+		public static final String EVENT_NAME_ATTR = "eventName";
+		public static final String SHOWINGS_AMOUNT_ATTR = "showingsAmount";
+	}
+
+	public static class TicketCreationPage {
+		
+		public static final String TEMPLATE_NAME = "TicketCreationPage";
+	
+		public static final String SHOWING_PLACE_ATTR = "showingPlace";
+		public static final String SHOWING_DATE_ATTR = "showingDate";
+		public static final String EVENT_NAME_ATTR = "eventName";
+	}
+	
+	public static class EventCreatedPage {
+		
+		public static final String TEMPLATE_NAME = "EventCreatedPage";
+	}
+	
 }
