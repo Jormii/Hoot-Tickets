@@ -38,6 +38,20 @@ public class Ticket {
 	}
 
 	/*
+	 * hashCode() and equals()
+	 */
+
+	@Override
+	public int hashCode() {
+		return ticketID.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return ticketID.equals(obj);
+	}
+
+	/*
 	 * Getters and setters
 	 */
 

@@ -7,11 +7,7 @@
 </head>
 
 <body>
-	{{#errorMessage}}
-	<p>Error found creating the event: {{errorMessage}}</p>
-	{{/errorMessage}}
-
-	<form method="post" action="/testShowingCreation">
+	<form method="post" action="/eventCreation/sendEventData">
 		<label>Event name: </label>
 		<input type="text" name="eventName" required="required"></input>
 		<br><br>
@@ -21,10 +17,7 @@
 		<label>Event description (optional):</label>
 		<textarea name="eventDescription" rows="5" cols="50"></textarea>
 		<br><br>
-		<label>How many showings?</label>
-		<input type="number" name="showingsAmount" min="1" required="required"></input>
-		<br><br>
-		<button type="submit">Proceed to showings</button>
+		<button type="submit">Start event creation</button>
 	</form>
 </body>
 

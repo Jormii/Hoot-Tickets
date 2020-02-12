@@ -7,19 +7,15 @@
 </head>
 
 <body>
-	<p>Creating event with name {{eventName}}</p>
-	
-	<form action="/testTicketCreation" method="post">
+	<form action="/eventCreation/sendShowingData" method="post">
+		<label>When is this showing taking place?</label>
+		<input type="date" name="showingDate" required="required">
+		<input type="time" name="showingTime" required="required">
+		<br>
 		<label>Where is this showing taking place?</label>
 		<input type="text" name="showingPlace" required="required">
 		<br><br>
-		<label>When? </label>
-		<input type="datetime-local" name="showingDate" required="required">
-		<br><br>
-		<label>How many types of tickets? </label>
-		<input type="number" name="showingTicketsAmount">
-		<br><br>
-		<button type="submit">Complete creation</button>
+		<button type="submit">Create showing</button>
 	</form>
 </body>
 

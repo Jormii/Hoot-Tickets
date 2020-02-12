@@ -1,5 +1,6 @@
 package dad.hoottickets;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
@@ -19,7 +21,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
+import dad.hoottickets.EventCreation.ProvisionalEvent;
+import dad.hoottickets.EventCreation.ProvisionalShowing;
+import dad.hoottickets.EventCreation.ProvisionalTicket;
+import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
+import dad.hoottickets.TemplatesAttributes.EventCreationPage;
+import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
+import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
+import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.EventRepository;
 import dad.hoottickets.database.Seller;
@@ -184,92 +195,156 @@ public class HootTicketsController {
 		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
 	}
 
-	@RequestMapping("/testEventCreation")
-	private String createEvent(HttpSession httpSession, Model model) {
-		return TemplatesAttributes.EventCreationPage.TEMPLATE_NAME;
+	// TODO: BORRAR
+	@RequestMapping("/")
+	private String accesoRapido(Model model) {
+		return eventCreation(model);
 	}
 
-	@PostMapping("/testShowingCreation")
-	private String createShowing(HttpSession httpSession, Model model, @RequestParam String eventName,
-			@RequestParam String eventSummary, @RequestParam String eventDescription,
-			@RequestParam int showingsAmount) {
-		String templateToReturn = TemplatesAttributes.ShowingCreationPage.TEMPLATE_NAME;
-		Event alreadyExistingEvent = eventRepository.findByEventName(eventName);
-		if (alreadyExistingEvent == null) {
-			// TODO
-			// Seller seller = (Seller) session.getUser();
-			Seller seller = madeUpSeller;
-			Event newEvent = new Event(eventName, eventSummary, eventDescription, seller);
-
-			EventCreation eventCreation = session.getEventCreation();
-			eventCreation.startEventCreation(newEvent, showingsAmount);
-
-			// TODO: Crear tantas sesiones como se ha indicado
-			model.addAttribute(TemplatesAttributes.ShowingCreationPage.EVENT_NAME_ATTR, eventName);
-			model.addAttribute(TemplatesAttributes.ShowingCreationPage.SHOWINGS_AMOUNT_ATTR, showingsAmount);
-		} else {
-			String errorMessage = String.format("An event with this name (%s) already exists", eventName);
-			model.addAttribute(TemplatesAttributes.EventCreationPage.ERROR_MESSAGE_ATTR, errorMessage);
-			templateToReturn = TemplatesAttributes.EventCreationPage.TEMPLATE_NAME;
-		}
-
-		return templateToReturn;
+	@RequestMapping("/eventCreation")
+	private String eventCreation(Model model) {
+		return EventCreationPage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/testTicketCreation")
-	private String createTicket(HttpSession httpSession, Model model, @RequestParam String showingPlace,
-			@RequestParam String showingDate, @RequestParam int showingTicketsAmount) {
-		model.addAttribute(TemplatesAttributes.TicketCreationPage.SHOWING_PLACE_ATTR, showingPlace);
-		model.addAttribute(TemplatesAttributes.TicketCreationPage.SHOWING_DATE_ATTR, showingDate);
-		model.addAttribute(TemplatesAttributes.TicketCreationPage.EVENT_NAME_ATTR, "<NOMBRE EVENTO>");
-		System.out.println(showingTicketsAmount); // TODO
+	@PostMapping("/eventCreation/sendEventData")
+	private RedirectView receiveEventData(@RequestParam String eventName, @RequestParam String eventSummary,
+			@RequestParam String eventDescription) {
+		EventCreation eventCreation = session.getEventCreation();
+		eventCreation.startEventCreation(eventName, eventSummary, eventDescription);
 
+		return new RedirectView("/eventCreation/showings");
+	}
+
+	@RequestMapping("eventCreation/showings")
+	private String eventCreationShowings(Model model) {
 		EventCreation eventCreation = session.getEventCreation();
 
-		// TODO: Hacer costante
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		// TODO: Recoger fecha de los argumentos
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 23:55:00"));
-		ShowingID showingID = new ShowingID(date, eventCreation.getEvent());
-		Showing newShowing = new Showing(showingID, showingPlace);
+		ProvisionalEvent provisionalEvent = eventCreation.getProvisionalEvent();
+		model.addAttribute(EventCreationShowingsPage.EVENT_NAME_ATTR, provisionalEvent.eventName);
+		model.addAttribute(EventCreationShowingsPage.EVENT_SUMMARY_ATTR, provisionalEvent.eventSummary);
+		model.addAttribute(EventCreationShowingsPage.EVENT_DESCRIPTION_ATTR, provisionalEvent.eventDescription);
+		model.addAttribute(EventCreationShowingsPage.PROVISIONAL_SHOWINGS_ATTR, eventCreation.getProvisionalShowings());
 
-		eventCreation.addShowingToEvent(newShowing, showingTicketsAmount);
-
-		return TemplatesAttributes.TicketCreationPage.TEMPLATE_NAME;
+		return EventCreationShowingsPage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/testCompleteCreation")
-	private String completeEventCreation(Model model, @RequestParam String ticketName, @RequestParam int ticketPrice,
-			@RequestParam int ticketTotal) {
+	@RequestMapping("eventCreation/createShowing")
+	private String showingCreation(Model model) {
+		return ShowingCreationPage.TEMPLATE_NAME;
+	}
 
+	@PostMapping("/eventCreation/sendShowingData")
+	private RedirectView receiveShowingData(@RequestParam String showingDate, @RequestParam String showingTime,
+			@RequestParam String showingPlace) {
+		String dateAndTime = String.format("%s %s", showingDate, showingTime);
+		EventCreation eventCreation = session.getEventCreation();
+		eventCreation.addShowingToEvent(dateAndTime, showingPlace);
+
+		return new RedirectView("/eventCreation/showings");
+	}
+
+	@PostMapping("eventCreation/createTicket")
+	private String ticketCreation(Model model, @RequestParam int showingIndex) {
+		int realIndex = showingIndex - 1;
+		EventCreation eventCreation = session.getEventCreation();
+		ProvisionalShowing provisionalShowing = eventCreation.getProvisionalShowings().get(realIndex);
+
+		model.addAttribute(TicketCreationPage.SHOWING_DATE_ATTR, provisionalShowing.showingDate);
+		model.addAttribute(TicketCreationPage.SHOWING_PLACE_ATTR, provisionalShowing.showingPlace);
+		model.addAttribute(TicketCreationPage.SHOWING_INDEX_ATTR, realIndex);
+
+		return TicketCreationPage.TEMPLATE_NAME;
+	}
+
+	@PostMapping("eventCreation/sendTicketData")
+	private RedirectView receiveTicketData(@RequestParam int showingIndex, @RequestParam String ticketName,
+			@RequestParam int ticketAmount, @RequestParam int ticketPrice) {
+		EventCreation eventCreation = session.getEventCreation();
+		ProvisionalShowing provisionalShowing = eventCreation.getProvisionalShowings().get(showingIndex);
+
+		provisionalShowing.addTicket(ticketName, ticketAmount, ticketPrice);
+
+		return new RedirectView("/eventCreation/showings");
+	}
+
+	@RequestMapping("eventCreation/checkIfValid")
+	private RedirectView createEventIfValid() {
+		EventCreation eventCreation = session.getEventCreation();
+		if (!eventCreation.isValid()) {
+			return new RedirectView("/eventCreation/failed");
+		}
+
+		saveEventInDatabase();
+		return new RedirectView("/eventCreation/completed");
+	}
+
+	private void saveEventInDatabase() {
+		Event event = retrieveEventFromEventCreation();
+		eventRepository.save(event);
+
+		List<Showing> showings = retrieveShowingsFromEventCreation(event);
+		showingRepository.saveAll(showings);
+
+		List<Ticket> tickets = retrieveTicketsFromEventCreation(showings);
+		ticketRepository.saveAll(tickets);
+	}
+
+	private Event retrieveEventFromEventCreation() {
+		EventCreation eventCreation = session.getEventCreation();
+
+		ProvisionalEvent provisionalEvent = eventCreation.getProvisionalEvent();
+		String eventName = provisionalEvent.eventName;
+		String eventSummary = provisionalEvent.eventSummary;
+		String eventDescription = provisionalEvent.eventDescription;
+		Seller eventSeller = madeUpSeller; // TODO: Sacar el vendedor de la sesion
+		return new Event(eventName, eventSummary, eventDescription, eventSeller);
+	}
+
+	private List<Showing> retrieveShowingsFromEventCreation(Event event) {
+		List<Showing> showings = new ArrayList<>();
+		EventCreation eventCreation = session.getEventCreation();
+
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		for (ProvisionalShowing provisionalEvent : eventCreation.getProvisionalShowings()) {
+			LocalDateTime showingDate = LocalDateTime.parse(provisionalEvent.showingDate, dateFormat);
+			ShowingID showingID = new ShowingID(showingDate, event);
+			Showing showing = new Showing(showingID, provisionalEvent.showingPlace);
+
+			showings.add(showing);
+		}
+
+		return showings;
+	}
+
+	private List<Ticket> retrieveTicketsFromEventCreation(List<Showing> showings) {
+		List<Ticket> tickets = new ArrayList<>();
+		EventCreation eventCreation = session.getEventCreation();
+
+		List<ProvisionalShowing> provisionalShowings = eventCreation.getProvisionalShowings();
+		for (int i = 0; i < showings.size(); ++i) {
+			ProvisionalShowing provisionalShowing = provisionalShowings.get(i);
+			Showing showing = showings.get(i);
+
+			for (ProvisionalTicket provisionalTicket : provisionalShowing.provisionalTickets) {
+				TicketID ticketID = new TicketID(provisionalTicket.ticketName, showing);
+				Ticket ticket = new Ticket(ticketID, provisionalTicket.ticketPrice, provisionalTicket.ticketAmount);
+
+				tickets.add(ticket);
+			}
+		}
+
+		return tickets;
+	}
+
+	@RequestMapping("eventCreation/completed")
+	private String completedEventCreation() {
+		return EventCreatedPage.TEMPLATE_NAME;
+	}
+
+	@RequestMapping("/eventCreation/failed")
+	private String failedEventCreation() {
 		// TODO
-		System.out.println(ticketName);
-		System.out.println(ticketPrice);
-		System.out.println(ticketTotal);
-
-		EventCreation eventCreation = session.getEventCreation();
-		Showing showing = eventCreation.getShowings().get(0);
-		TicketID ticketID = new TicketID(ticketName, showing);
-		Ticket newTicket = new Ticket(ticketID, ticketPrice, ticketTotal);
-		eventCreation.addTicketToEvent(newTicket, showing);
-
-		saveNewEvent();
-
-		return TemplatesAttributes.EventCreatedPage.TEMPLATE_NAME;
-	}
-
-	private void saveNewEvent() {
-		EventCreation eventCreation = session.getEventCreation();
-
-		Event newEvent = eventCreation.getEvent();
-		eventRepository.save(newEvent);
-
-		List<Showing> newShowings = eventCreation.getShowings();
-		showingRepository.saveAll(newShowings);
-
-		for (List<Ticket> newTickets : eventCreation.getTickets().values()) {
-			ticketRepository.saveAll(newTickets);
-		}
+		return "";
 	}
 
 }

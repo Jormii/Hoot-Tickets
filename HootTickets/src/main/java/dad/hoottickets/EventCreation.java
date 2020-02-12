@@ -1,75 +1,105 @@
 package dad.hoottickets;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.Showing;
+import dad.hoottickets.database.ShowingID;
 import dad.hoottickets.database.Ticket;
 
+@Service
 public class EventCreation {
 
-	private Event event;
-	private int showingsAmount;
-	private List<Showing> showings;
-	private Map<Showing, Integer> ticketsAmount;
-	private Map<Showing, List<Ticket>> tickets;
+	private ProvisionalEvent provisionalEvent;
+	private List<ProvisionalShowing> provisionalShowings;
 
-	public EventCreation() {
-		this.event = null;
-		this.showings = new ArrayList<>();
-		this.ticketsAmount = new HashMap<>();
-		this.tickets = new HashMap<Showing, List<Ticket>>();
+	static class ProvisionalEvent {
+
+		public String eventName;
+		public String eventSummary;
+		public String eventDescription;
+
 	}
 
-	public void startEventCreation(Event event, int showingsAmount) {
-		this.event = event;
-		this.showingsAmount = showingsAmount;
-	}
+	static class ProvisionalShowing {
 
-	public void addShowingToEvent(Showing showing, int ticketsAmount) {
-		showings.add(showing);
-		this.ticketsAmount.put(showing, ticketsAmount);
-	}
+		public String showingDate;
+		public String showingPlace;
+		public List<ProvisionalTicket> provisionalTickets;
 
-	public void addTicketToEvent(Ticket ticket, Showing showing) {
-		if (!tickets.containsKey(showing)) {
-			tickets.put(showing, new ArrayList<>());
+		public ProvisionalShowing(String showingDate, String showingPlace) {
+			this.showingDate = showingDate;
+			this.showingPlace = showingPlace;
+			provisionalTickets = new ArrayList<>();
 		}
 
-		tickets.get(showing).add(ticket);
+		public void addTicket(String ticketName, int ticketAmount, int ticketPrice) {
+			ProvisionalTicket provisionalTicket = new ProvisionalTicket(ticketName, ticketAmount, ticketPrice);
+			provisionalTickets.add(provisionalTicket);
+		}
+
+	}
+
+	static class ProvisionalTicket {
+
+		public String ticketName;
+		public int ticketAmount;
+		public int ticketPrice;
+
+		public ProvisionalTicket(String ticketName, int ticketAmount, int ticketPrice) {
+			this.ticketName = ticketName;
+			this.ticketAmount = ticketAmount;
+			this.ticketPrice = ticketPrice;
+		}
+
+	}
+
+	public EventCreation() {
+		this.provisionalEvent = new ProvisionalEvent();
+		this.provisionalShowings = new ArrayList<>();
+	}
+
+	public void startEventCreation(String eventName, String eventSummary, String eventDescription) {
+		provisionalEvent.eventName = eventName;
+		provisionalEvent.eventSummary = eventSummary;
+		provisionalEvent.eventDescription = eventDescription;
+		provisionalShowings.clear();
+	}
+
+	public void addShowingToEvent(String showingDate, String showingPlace) {
+		ProvisionalShowing provisionalShowing = new ProvisionalShowing(showingDate, showingPlace);
+		provisionalShowings.add(provisionalShowing);
+	}
+
+	public boolean isValid() {
+		// TODO
+		return true;
 	}
 
 	public void reset() {
-		event = null;
-		showings.clear();
-		tickets.clear();
+		provisionalEvent = null;
+		provisionalShowings.clear();
 	}
 
 	/*
 	 * Getters and setters
 	 */
 
-	public Event getEvent() {
-		return event;
+	public ProvisionalEvent getProvisionalEvent() {
+		return provisionalEvent;
 	}
 
-	public int getShowingsAmount() {
-		return showingsAmount;
-	}
-
-	public List<Showing> getShowings() {
-		return showings;
-	}
-
-	public Map<Showing, Integer> getTicketsAmount() {
-		return ticketsAmount;
-	}
-
-	public Map<Showing, List<Ticket>> getTickets() {
-		return tickets;
+	public List<ProvisionalShowing> getProvisionalShowings() {
+		return provisionalShowings;
 	}
 
 }
