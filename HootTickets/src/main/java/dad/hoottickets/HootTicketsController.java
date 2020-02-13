@@ -110,13 +110,25 @@ public class HootTicketsController {
 		int ticketTotalSeats = 100;
 		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats);
 
+		String ticketName_2 = "Nombre de otra entrada";
+		TicketID ticketID_2 = new TicketID(ticketName_2, showing);
+		int ticketPrice_2 = 20;
+		int ticketTotalSeats_2 = 50;
+		Ticket ticket_2 = new Ticket(ticketID_2, ticketPrice_2, ticketTotalSeats_2);
+
 		ticketRepository.save(ticket);
+		ticketRepository.save(ticket_2);
 
 		TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(madeUpSeller, ticket);
 		int quantity = 1;
 		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity);
 
+		TicketPurchaseUniqueID ticketPurchaseID_2 = new TicketPurchaseUniqueID(madeUpSeller, ticket_2);
+		int quantity_2 = 2;
+		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2);
+
 		ticketPurchaseRepository.save(ticketPurchase);
+		ticketPurchaseRepository.save(ticketPurchase_2);
 	}
 
 	private void updateHTTPSession(HttpSession httpSession) {
