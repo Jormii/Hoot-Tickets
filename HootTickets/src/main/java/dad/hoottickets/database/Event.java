@@ -33,7 +33,7 @@ public class Event {
 	@JoinColumn(name = "sellerEvents")
 	private Seller eventSeller;
 
-	@OneToMany
+	@OneToMany(mappedBy = "showingEvent")
 	private List<Showing> eventShowings = new ArrayList<>();
 
 	public Event() {

@@ -40,6 +40,7 @@ public class TemplatesAttributes {
 		public static final String SHOWING_TIME_ATTR = "showingTime";
 		public static final String SHOWING_PLACE_ATTR = "showingPlace";
 		public static final String TICKETS_SELECTED_ATTR = "ticketsSelected";
+		public static final String TICKETS_SELECTED_QUANTITY_ATTR = "quantity";
 	}
 
 	public static class FinishedCheckoutPage {

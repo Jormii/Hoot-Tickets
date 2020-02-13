@@ -26,7 +26,10 @@
 			<tr>
 				<td>Nombre del evento: {{eventName}}</td>
 				<td>Resumen del evento: {{eventSummary}}</td>
-				<td><a href="/testEventPage/{{eventID}}">Ver Sesiones</a></td>
+				<td><form action="testEventPage" method="post">
+				<input type="hidden" name="eventID" value="{{eventID}}"/>
+				<input type="submit" value="sesiones"/>
+				</form></td>
 			</tr>
 
 			{{/eventsList}}
