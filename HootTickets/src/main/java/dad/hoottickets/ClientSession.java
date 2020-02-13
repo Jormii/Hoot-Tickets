@@ -12,6 +12,7 @@ import dad.hoottickets.database.Event;
 import dad.hoottickets.database.Showing;
 import dad.hoottickets.database.Ticket;
 import dad.hoottickets.database.User;
+import dad.hoottickets.eventcreation.EventCreation;
 
 @Component
 @SessionScope

@@ -1,20 +1,14 @@
 package dad.hoottickets;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-import dad.hoottickets.EventCreation.ProvisionalEvent;
-import dad.hoottickets.EventCreation.ProvisionalShowing;
-import dad.hoottickets.EventCreation.ProvisionalTicket;
 import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
@@ -45,6 +36,10 @@ import dad.hoottickets.database.TicketPurchaseRepository;
 import dad.hoottickets.database.TicketRepository;
 import dad.hoottickets.database.User;
 import dad.hoottickets.database.UserRepository;
+import dad.hoottickets.eventcreation.EventCreation;
+import dad.hoottickets.eventcreation.ProvisionalEvent;
+import dad.hoottickets.eventcreation.ProvisionalShowing;
+import dad.hoottickets.eventcreation.ProvisionalTicket;
 
 @Controller
 public class HootTicketsController {
@@ -210,7 +205,8 @@ public class HootTicketsController {
 	private RedirectView receiveEventData(@RequestParam String eventName, @RequestParam String eventSummary,
 			@RequestParam String eventDescription) {
 		EventCreation eventCreation = session.getEventCreation();
-		eventCreation.startEventCreation(eventName, eventSummary, eventDescription);
+		ProvisionalEvent provisionalEvent = new ProvisionalEvent(eventName, eventSummary, eventDescription);
+		eventCreation.startEventCreation(provisionalEvent);
 
 		return new RedirectView("/eventCreation/showings");
 	}
@@ -220,9 +216,9 @@ public class HootTicketsController {
 		EventCreation eventCreation = session.getEventCreation();
 
 		ProvisionalEvent provisionalEvent = eventCreation.getProvisionalEvent();
-		model.addAttribute(EventCreationShowingsPage.EVENT_NAME_ATTR, provisionalEvent.eventName);
-		model.addAttribute(EventCreationShowingsPage.EVENT_SUMMARY_ATTR, provisionalEvent.eventSummary);
-		model.addAttribute(EventCreationShowingsPage.EVENT_DESCRIPTION_ATTR, provisionalEvent.eventDescription);
+		model.addAttribute(EventCreationShowingsPage.EVENT_NAME_ATTR, provisionalEvent.getEventName());
+		model.addAttribute(EventCreationShowingsPage.EVENT_SUMMARY_ATTR, provisionalEvent.getEventSummary());
+		model.addAttribute(EventCreationShowingsPage.EVENT_DESCRIPTION_ATTR, provisionalEvent.getEventDescription());
 		model.addAttribute(EventCreationShowingsPage.PROVISIONAL_SHOWINGS_ATTR, eventCreation.getProvisionalShowings());
 
 		return EventCreationShowingsPage.TEMPLATE_NAME;
@@ -238,7 +234,8 @@ public class HootTicketsController {
 			@RequestParam String showingPlace) {
 		String dateAndTime = String.format("%s %s", showingDate, showingTime);
 		EventCreation eventCreation = session.getEventCreation();
-		eventCreation.addShowingToEvent(dateAndTime, showingPlace);
+		ProvisionalShowing provisionalShowing = new ProvisionalShowing(dateAndTime, showingPlace);
+		eventCreation.addShowingToEvent(provisionalShowing);
 
 		return new RedirectView("/eventCreation/showings");
 	}
@@ -249,8 +246,8 @@ public class HootTicketsController {
 		EventCreation eventCreation = session.getEventCreation();
 		ProvisionalShowing provisionalShowing = eventCreation.getProvisionalShowings().get(realIndex);
 
-		model.addAttribute(TicketCreationPage.SHOWING_DATE_ATTR, provisionalShowing.showingDate);
-		model.addAttribute(TicketCreationPage.SHOWING_PLACE_ATTR, provisionalShowing.showingPlace);
+		model.addAttribute(TicketCreationPage.SHOWING_DATE_ATTR, provisionalShowing.getShowingDate());
+		model.addAttribute(TicketCreationPage.SHOWING_PLACE_ATTR, provisionalShowing.getShowingPlace());
 		model.addAttribute(TicketCreationPage.SHOWING_INDEX_ATTR, realIndex);
 
 		return TicketCreationPage.TEMPLATE_NAME;
@@ -260,9 +257,8 @@ public class HootTicketsController {
 	private RedirectView receiveTicketData(@RequestParam int showingIndex, @RequestParam String ticketName,
 			@RequestParam int ticketAmount, @RequestParam int ticketPrice) {
 		EventCreation eventCreation = session.getEventCreation();
-		ProvisionalShowing provisionalShowing = eventCreation.getProvisionalShowings().get(showingIndex);
-
-		provisionalShowing.addTicket(ticketName, ticketAmount, ticketPrice);
+		ProvisionalTicket provisionalTicket = new ProvisionalTicket(ticketName, ticketAmount, ticketPrice);
+		eventCreation.addTicketToShowing(showingIndex, provisionalTicket);
 
 		return new RedirectView("/eventCreation/showings");
 	}
@@ -293,9 +289,9 @@ public class HootTicketsController {
 		EventCreation eventCreation = session.getEventCreation();
 
 		ProvisionalEvent provisionalEvent = eventCreation.getProvisionalEvent();
-		String eventName = provisionalEvent.eventName;
-		String eventSummary = provisionalEvent.eventSummary;
-		String eventDescription = provisionalEvent.eventDescription;
+		String eventName = provisionalEvent.getEventName();
+		String eventSummary = provisionalEvent.getEventSummary();
+		String eventDescription = provisionalEvent.getEventDescription();
 		Seller eventSeller = madeUpSeller; // TODO: Sacar el vendedor de la sesion
 		return new Event(eventName, eventSummary, eventDescription, eventSeller);
 	}
@@ -306,9 +302,9 @@ public class HootTicketsController {
 
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		for (ProvisionalShowing provisionalEvent : eventCreation.getProvisionalShowings()) {
-			LocalDateTime showingDate = LocalDateTime.parse(provisionalEvent.showingDate, dateFormat);
+			LocalDateTime showingDate = LocalDateTime.parse(provisionalEvent.getShowingDate(), dateFormat);
 			ShowingID showingID = new ShowingID(showingDate, event);
-			Showing showing = new Showing(showingID, provisionalEvent.showingPlace);
+			Showing showing = new Showing(showingID, provisionalEvent.getShowingPlace());
 
 			showings.add(showing);
 		}
@@ -325,9 +321,10 @@ public class HootTicketsController {
 			ProvisionalShowing provisionalShowing = provisionalShowings.get(i);
 			Showing showing = showings.get(i);
 
-			for (ProvisionalTicket provisionalTicket : provisionalShowing.provisionalTickets) {
-				TicketID ticketID = new TicketID(provisionalTicket.ticketName, showing);
-				Ticket ticket = new Ticket(ticketID, provisionalTicket.ticketPrice, provisionalTicket.ticketAmount);
+			for (ProvisionalTicket provisionalTicket : provisionalShowing.getProvisionalTickets()) {
+				TicketID ticketID = new TicketID(provisionalTicket.getTicketName(), showing);
+				Ticket ticket = new Ticket(ticketID, provisionalTicket.getTicketPrice(),
+						provisionalTicket.getTicketAmount());
 
 				tickets.add(ticket);
 			}
