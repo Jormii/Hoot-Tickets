@@ -15,27 +15,23 @@
 	<h3>Place: {{showingPlace}}</h3>
 	<h5>Seats available</h5>
 	<form method="POST" action="/testCheckoutPage">
-	<input type="hidden" name="ShowingDate" value="{{showingTime}}"/> 
-    <input type="hidden" name="ShowingEvent" value="{{eventName}}"/> 
-	{{#showingTicketsList}}
-	<table>
-		<tr>
-			<td>Ticket name: {{ticketID.ticketName}}</td>
-			<td>Available/Total seats: {{ticketAvailableSeats}}/{{ticketTotalSeats}}</td>
-			<td>Ticket price: {{ticketPrice}}</td>
+		<input type="hidden" name="showingDate" value="{{showingTime}}" /> <input
+			type="hidden" name="showingEvent" value="{{eventName}}" />
+		{{#showingTicketsList}}
+		<table>
+			<tr>
+				<td>Ticket name: {{ticketID.ticketName}}</td>
+				<td>Available/Total seats:
+					{{ticketAvailableSeats}}/{{ticketTotalSeats}}</td>
+				<td>Ticket price: {{ticketPrice}}</td>
 
-			<td><p>How many?</p></td>
-			<td>
-				
-					<input type="text" name="seat[]"/>
-				
-			</td>
-		</tr>
-	</table>
-	{{/showingTicketsList}}
-		
-	 <input type="submit" value="Submit" />
-</form>
+				<td><p>How many?</p></td>
+				<td><input type="text" name="seat[]" /></td>
+			</tr>
+		</table>
+		{{/showingTicketsList}}
+		<input type="submit" value="Submit" />
+	</form>
 </body>
 
 </html>

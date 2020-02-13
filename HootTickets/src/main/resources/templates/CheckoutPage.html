@@ -5,27 +5,29 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
+<body>
 	<h5>Nombre del evento: {{eventName}}</h5>
-	
+
 	<h5>La sesión ocurre el día: {{showingTime}}</h5>
 	<h5>La sesión tiene lugar en: {{showingPlace}}</h5>
-	
+
 	<h5>Entradas seleccionadas a continuación</h5>
 	<form method="POST" action="/testFinishedCheckoutPage">
-		<input type="hidden" name="ShowingDate" value="{{showingTime}}"/> 
-    <input type="hidden" name="ShowingEvent" value="{{eventName}}"/> 
-	<table>
-		{{#ticketsSelected}}
-		<tr>
-			<td>Ticket name: {{ticketID.ticketName}}</td>
-			<td>Ticket price: {{ticketPrice}}</td>
-			<td>Ticket quantity: {{quantity}}</td>
-			<input type="hidden" name=seat[] value="{{quantity}}"/>
-		</tr>
-		{{/ticketsSelected}}
-	</table>
-	
-	<p></p>
+		<input type="hidden" name="showingDate" value="{{showingTime}}" /> <input
+			type="hidden" name="showingEvent" value="{{eventName}}" />
+		<table>
+			{{#ticketsSelected}}
+			<tr>
+				<td>Ticket name: {{ticketID.ticketName}}</td>
+				<td>Ticket price: {{ticketPrice}}</td>
+				<td>Ticket quantity: {{quantity}}</td>
+				<input type="hidden" name=seat[] value="{{quantity}}" />
+			</tr>
+			{{/ticketsSelected}}
+		</table>
+
+		<p></p>
 		<table>
 			<tr>
 				<td>Número de tarjeta</td>
@@ -36,12 +38,9 @@
 				<td><input type="text" name="cvv"></td>
 			</tr>
 		</table>
-		
+
 		<button type="submit">Complete check-out</button>
 	</form>
-	
-<body>
-
 </body>
 
 </html>

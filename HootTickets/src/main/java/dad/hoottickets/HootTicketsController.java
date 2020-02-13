@@ -26,10 +26,12 @@ import dad.hoottickets.TemplatesAttributes.CheckoutPage;
 import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
+import dad.hoottickets.TemplatesAttributes.EventPage;
 import dad.hoottickets.TemplatesAttributes.HomePage;
 import dad.hoottickets.TemplatesAttributes.RegistrationPage;
 import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
 import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
+import dad.hoottickets.TemplatesAttributes.TicketSelectionPage;
 import dad.hoottickets.TemplatesAttributes.UserTicketsPage;
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.EventRepository;
@@ -75,7 +77,13 @@ public class HootTicketsController {
 	private TicketPurchaseRepository ticketPurchaseRepository;
 
 	private LocalDateTime formatDateTime(String dateTime) {
-		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+		int tIndex = dateTime.indexOf('T');
+		if (tIndex != -1) {
+			dateTime = dateTime.replace('T', ' ');
+		}
+
 		return LocalDateTime.parse(dateTime, dateTimeFormat);
 	}
 
@@ -163,21 +171,18 @@ public class HootTicketsController {
 
 	@PostMapping("/testEventPage")
 	private String eventPageTest(Model model, @RequestParam int eventID) {
-		// System.out.println(eventID);
-		// int eventIDAsInt = Integer.parseInt(eventID);
-
 		Event event = eventRepository.findById(eventID).get();
 		String eventName = event.getEventName();
 		String eventSummary = event.getEventSummary();
 		String eventDescription = event.getEventDescription();
 		List<Showing> eventShowings = event.getEventShowings();
 
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_NAME_ATTR, eventName);
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_SUMMARY_ATTR, eventSummary);
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_DESCRIPTION_ATTR, eventDescription);
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_SHOWINGS_LIST_ATTR, eventShowings);
+		model.addAttribute(EventPage.EVENT_NAME_ATTR, eventName);
+		model.addAttribute(EventPage.EVENT_SUMMARY_ATTR, eventSummary);
+		model.addAttribute(EventPage.EVENT_DESCRIPTION_ATTR, eventDescription);
+		model.addAttribute(EventPage.EVENT_SHOWINGS_LIST_ATTR, eventShowings);
 
-		return TemplatesAttributes.EventPage.TEMPLATE_NAME;
+		return EventPage.TEMPLATE_NAME;
 	}
 
 	@PostMapping("/testTicketSelectionPage")
@@ -192,13 +197,13 @@ public class HootTicketsController {
 		String showingPlace = showing.getShowingPlace();
 		List<Ticket> showingTickets = showing.getShowingTickets();
 
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_NAME_ATTR, eventName);
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, showingDate);
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_PLACE_ATTR, showingPlace);
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TICKETS_ATTR, showingTickets);
+		model.addAttribute(TicketSelectionPage.EVENT_NAME_ATTR, eventName);
+		model.addAttribute(TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
+		model.addAttribute(TicketSelectionPage.SHOWING_TIME_ATTR, showingDate);
+		model.addAttribute(TicketSelectionPage.SHOWING_PLACE_ATTR, showingPlace);
+		model.addAttribute(TicketSelectionPage.SHOWING_TICKETS_ATTR, showingTickets);
 
-		return TemplatesAttributes.TicketSelectionPage.TEMPLATE_NAME;
+		return TicketSelectionPage.TEMPLATE_NAME;
 	}
 
 	@PostMapping("/testCheckoutPage")
