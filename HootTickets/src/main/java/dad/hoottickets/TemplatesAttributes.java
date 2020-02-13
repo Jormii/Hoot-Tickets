@@ -45,4 +45,38 @@ public class TemplatesAttributes {
 		public static final String TEMPLATE_NAME = "FinishedCheckoutPage";
 	}
 
+	public static class EventCreationPage {
+
+		public static final String TEMPLATE_NAME = "EventCreationPage";
+	}
+
+	public static class EventCreationShowingsPage {
+
+		public static final String TEMPLATE_NAME = "EventCreationShowingsPage";
+
+		public static final String EVENT_NAME_ATTR = "eventName";
+		public static final String EVENT_SUMMARY_ATTR = "eventSummary";
+		public static final String EVENT_DESCRIPTION_ATTR = "eventDescription";
+		public static final String PROVISIONAL_SHOWINGS_ATTR = "provisionalShowings";
+	}
+
+	public static class ShowingCreationPage {
+
+		public static final String TEMPLATE_NAME = "ShowingCreationPage";
+	}
+
+	public static class TicketCreationPage {
+
+		public static final String TEMPLATE_NAME = "TicketCreationPage";
+
+		public static final String SHOWING_DATE_ATTR = "showingDate";
+		public static final String SHOWING_PLACE_ATTR = "showingPlace";
+		public static final String SHOWING_INDEX_ATTR = "showingIndex";
+	}
+	
+	public static class EventCreatedPage {
+		
+		public static final String TEMPLATE_NAME = "EventCreatedPage";
+	}
+
 }
