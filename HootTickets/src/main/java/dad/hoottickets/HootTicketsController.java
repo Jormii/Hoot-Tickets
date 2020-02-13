@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 
@@ -47,7 +48,7 @@ public class HootTicketsController {
 
 	@Autowired
 	private TicketPurchaseRepository ticketPurchaseRepository;
-
+	
 	@PostConstruct
 	public void init() {
 		String userUsername = "Nombre de usuario del usuario";
@@ -90,11 +91,11 @@ public class HootTicketsController {
 
 		ticketRepository.save(ticket);
 
-		TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
+		/*TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
 		int quantity = 1;
 		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity);
 
-		ticketPurchaseRepository.save(ticketPurchase);
+		ticketPurchaseRepository.save(ticketPurchase);*/
 	}
 
 	@RequestMapping("/testHomePage")
@@ -129,16 +130,16 @@ public class HootTicketsController {
 	private String ticketSelectionPage(Model model,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
 		 SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
 		 Date date= formatter.parse(ShowingDate);
+
 		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
 		String eventName = showing.getShowingEvent().getEventName();
 		String eventSummary = showing.getShowingEvent().getEventSummary();
-		Date showingTime = showing.getShowingID().getShowingDate();
 		String showingPlace = showing.getShowingPlace();
 		List<Ticket> showingTickets = showing.getShowingTickets();
 
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, showingTime);
+		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, ShowingDate);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TICKETS_ATTR, showingTickets);
 
@@ -146,28 +147,45 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("/testCheckoutPage")
-	private String checkoutPage(Model model,@RequestParam("seat[]") List<String> to) {
-		for(String number : to) {
-	        System.out.println(number);
-	    
-	
-
-		Ticket ticket = ticketRepository.findAll().get(0);
+	private String checkoutPage(Model model,@RequestParam("seat[]") List<String> to,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
+		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+		 Date date= formatter.parse(ShowingDate);
+		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
+		List<Ticket> showingTickets = showing.getShowingTickets();
+		
+		int i=0;
+		for(Ticket ticket : showingTickets) {
 		String eventName = ticket.getTicketID().getTicketShowing().getShowingEvent().getEventName();
-		Date showingTime = ticket.getTicketID().getTicketShowing().getShowingID().getShowingDate();
 		String showingPlace = ticket.getTicketID().getTicketShowing().getShowingPlace();
 
 		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
-		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingTime);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, ShowingDate);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_ATTR, ticket);
-		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_QUA,number);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_QUA,to.get(i));
+		i++;
 		}
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}
 
-	@RequestMapping("/testFinishedCheckoutPage")
-	private String finishedCheckoutPage(Model model) {
+	@PostMapping("/testFinishedCheckoutPage")
+	private String finishedCheckoutPage(Model model,@RequestParam("seat[]") List<String> to,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
+		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+		 Date date= formatter.parse(ShowingDate);
+		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
+		int i=0;
+		List<Ticket> showingTickets = showing.getShowingTickets();
+		User user= userRepository.findAll().get(0);
+		for(Ticket ticket : showingTickets) {
+			if(to.get(i)!= "0") {
+				TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
+				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, Integer.parseInt(to.get(i)));
+				ticketPurchaseRepository.save(ticketPurchase);
+				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats()-Integer.parseInt(to.get(i)));
+				ticketRepository.save(ticket);
+			}
+			i++;
+		}
 		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
 	}
 
