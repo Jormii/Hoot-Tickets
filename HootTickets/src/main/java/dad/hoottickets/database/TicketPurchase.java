@@ -2,13 +2,19 @@ package dad.hoottickets.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class TicketPurchase {
 
 	@Id
-	private TicketPurchaseID ticketPurchaseID;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long purchaseID;
+	
+	@Column(unique = true)
+	private TicketPurchaseUniqueID ticketPurchaseUniqueID;
 
 	@Column(nullable = false)
 	private int quantity;
@@ -17,8 +23,8 @@ public class TicketPurchase {
 
 	}
 
-	public TicketPurchase(TicketPurchaseID ticketPurchaseID, int quantity) {
-		this.ticketPurchaseID = ticketPurchaseID;
+	public TicketPurchase(TicketPurchaseUniqueID ticketPurchaseUniqueID, int quantity) {
+		this.ticketPurchaseUniqueID = ticketPurchaseUniqueID;
 		this.quantity = quantity;
 	}
 
@@ -26,12 +32,20 @@ public class TicketPurchase {
 	 * Getters and setters
 	 */
 
-	public TicketPurchaseID getTicketPurchaseID() {
-		return ticketPurchaseID;
+	public long getPurchaseID() {
+		return purchaseID;
 	}
 
-	public void setTicketPurchaseID(TicketPurchaseID ticketPurchaseID) {
-		this.ticketPurchaseID = ticketPurchaseID;
+	public void setPurchaseID(long purchaseID) {
+		this.purchaseID = purchaseID;
+	}
+
+	public TicketPurchaseUniqueID getTicketPurchaseUniqueID() {
+		return ticketPurchaseUniqueID;
+	}
+
+	public void setTicketPurchaseUniqueID(TicketPurchaseUniqueID ticketPurchaseUniqueID) {
+		this.ticketPurchaseUniqueID = ticketPurchaseUniqueID;
 	}
 
 	public int getQuantity() {

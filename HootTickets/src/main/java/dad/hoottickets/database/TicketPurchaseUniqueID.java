@@ -8,7 +8,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 @Embeddable
-public class TicketPurchaseID implements Serializable {
+public class TicketPurchaseUniqueID implements Serializable {
 
 	/**
 	 * 
@@ -24,11 +24,11 @@ public class TicketPurchaseID implements Serializable {
 			@JoinColumn(name = "ticketID.showingID.showingEvenID") })
 	private Ticket ticket;
 
-	public TicketPurchaseID() {
+	public TicketPurchaseUniqueID() {
 
 	}
 
-	public TicketPurchaseID(User user, Ticket ticket) {
+	public TicketPurchaseUniqueID(User user, Ticket ticket) {
 		this.user = user;
 		this.ticket = ticket;
 	}
@@ -54,7 +54,7 @@ public class TicketPurchaseID implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TicketPurchaseID other = (TicketPurchaseID) obj;
+		TicketPurchaseUniqueID other = (TicketPurchaseUniqueID) obj;
 		if (ticket == null) {
 			if (other.ticket != null)
 				return false;

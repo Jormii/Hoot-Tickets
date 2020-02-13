@@ -24,6 +24,7 @@ import dad.hoottickets.TemplatesAttributes.HomePage;
 import dad.hoottickets.TemplatesAttributes.RegistrationPage;
 import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
 import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
+import dad.hoottickets.TemplatesAttributes.UserTicketsPage;
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.EventRepository;
 import dad.hoottickets.database.Seller;
@@ -33,9 +34,9 @@ import dad.hoottickets.database.ShowingRepository;
 import dad.hoottickets.database.Ticket;
 import dad.hoottickets.database.TicketID;
 import dad.hoottickets.database.TicketPurchase;
-import dad.hoottickets.database.TicketPurchaseID;
 import dad.hoottickets.database.TicketPurchaseRepository;
 import dad.hoottickets.database.TicketRepository;
+import dad.hoottickets.database.TicketPurchaseUniqueID;
 import dad.hoottickets.database.User;
 import dad.hoottickets.database.UserRepository;
 import dad.hoottickets.eventcreation.EventCreation;
@@ -111,7 +112,7 @@ public class HootTicketsController {
 
 		ticketRepository.save(ticket);
 
-		TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
+		TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(madeUpSeller, ticket);
 		int quantity = 1;
 		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity);
 
@@ -392,4 +393,35 @@ public class HootTicketsController {
 
 		return new RedirectView("/testHomePage");
 	}
+
+	/*
+	 * Ticket refund
+	 */
+
+	@RequestMapping("/user/myTickets")
+	private String listUserTickets(Model model) {
+		// TODO: Sacar el usuario de la sesión
+		User user = madeUpSeller;
+		List<TicketPurchase> purchases = ticketPurchaseRepository.findByTicketPurchaseUniqueID_User(user);
+
+		model.addAttribute(UserTicketsPage.TICKETS_BOUGHT_ATTR, purchases);
+
+		return UserTicketsPage.TEMPLATE_NAME;
+	}
+
+	@PostMapping("/user/refundTicket")
+	private RedirectView refundTicket(@RequestParam long ticketPurchaseID) {
+		TicketPurchase purchase = ticketPurchaseRepository.findById(ticketPurchaseID).get();
+		Ticket ticket = purchase.getTicketPurchaseUniqueID().getTicket();
+
+		int seatsLeft = ticket.getTicketAvailableSeats();
+		int seatsBought = purchase.getQuantity();
+		ticket.setTicketAvailableSeats(seatsBought + seatsLeft);
+
+		ticketRepository.save(ticket);
+		ticketPurchaseRepository.deleteById(ticketPurchaseID);
+
+		return new RedirectView("/user/myTickets");
+	}
+
 }

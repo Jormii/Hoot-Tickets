@@ -18,7 +18,7 @@ public class TicketID implements Serializable {
 	private String ticketName;
 
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "showingID.showinDate"), @JoinColumn(name = "showingID.showingEventID") })
+	@JoinColumns({ @JoinColumn(name = "showingID.showingDate"), @JoinColumn(name = "showingID.showingEventID") })
 	private Showing ticketShowing;
 
 	public TicketID() {

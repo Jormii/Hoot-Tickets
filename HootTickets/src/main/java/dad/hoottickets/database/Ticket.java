@@ -23,7 +23,7 @@ public class Ticket {
 	@Column(nullable = false)
 	private int ticketAvailableSeats;
 
-	@OneToMany(mappedBy = "ticketPurchaseID.ticket")
+	@OneToMany(mappedBy = "ticketPurchaseUniqueID.ticket")
 	private List<TicketPurchase> ticketBuyers = new ArrayList<>();
 
 	public Ticket() {

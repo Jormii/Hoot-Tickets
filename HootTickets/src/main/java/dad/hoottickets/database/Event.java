@@ -33,7 +33,7 @@ public class Event {
 	@JoinColumn(name = "sellerEvents")
 	private Seller eventSeller;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany
 	private List<Showing> eventShowings = new ArrayList<>();
 
 	public Event() {

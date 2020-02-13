@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+	<h5>Tickets you've bought</h5>
+	{{#ticketsBought}}
+	<p>----</p>
+	<p>Ticket for event happening day/place:
+		{{ticketPurchaseUniqueID.ticket.ticketID.ticketShowing.showingID.showingDate}} /
+		{{ticketPurchaseUniqueID.ticket.ticketID.ticketShowing.showingPlace}}</p>
+	<p>Tickets bought: {{quantity}}</p>
+	<p>Price of this ticket: {{ticketPurchaseUniqueID.ticket.ticketPrice}} $</p>
+	<form action="/user/refundTicket" method="post">
+		<input type="hidden" name="ticketPurchaseID" value="{{purchaseID}}">
+		<button type="submit">Refund this ticket</button>
+	</form>
+	{{/ticketsBought}}
+	{{^ticketsBought}}
+	<p>You've bought no tickets</p>
+	{{/ticketsBought}}
+</body>
+
+</html>

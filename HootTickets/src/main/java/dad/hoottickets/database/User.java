@@ -26,7 +26,7 @@ public class User {
 	@Column(nullable = false)
 	protected String userPassword;
 
-	@OneToMany(mappedBy = "ticketPurchaseID.user")
+	@OneToMany(mappedBy = "ticketPurchaseUniqueID.user")
 	protected List<TicketPurchase> userTickets = new ArrayList<>();
 
 	public User() {
