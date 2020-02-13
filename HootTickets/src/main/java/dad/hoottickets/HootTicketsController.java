@@ -20,6 +20,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
+import dad.hoottickets.TemplatesAttributes.HomePage;
+import dad.hoottickets.TemplatesAttributes.RegistrationPage;
 import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
 import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
 import dad.hoottickets.database.Event;
@@ -126,7 +128,11 @@ public class HootTicketsController {
 	private String home(Model model) {
 		List<Event> eventsList = eventRepository.findAll();
 
-		model.addAttribute(TemplatesAttributes.HomePage.EVENTS_LIST_ATTR, eventsList);
+		if (session.hasLoggedIn()) {
+			model.addAttribute(HomePage.USERNAME_ATTR, session.getUser().getUserName());
+		}
+		model.addAttribute(HomePage.LOGGED_IN_ATTR, session.hasLoggedIn());
+		model.addAttribute(HomePage.EVENTS_LIST_ATTR, eventsList);
 
 		return TemplatesAttributes.HomePage.TEMPLATE_NAME;
 	}
@@ -193,7 +199,7 @@ public class HootTicketsController {
 	// TODO: BORRAR
 	@RequestMapping("/")
 	private String accesoRapido(Model model) {
-		return eventCreation(model);
+		return home(model);
 	}
 
 	@RequestMapping("/eventCreation")
@@ -344,4 +350,46 @@ public class HootTicketsController {
 		return "";
 	}
 
+	/*
+	 * User registration
+	 */
+
+	private String registrationErrorMessage = null; // TODO: Hacerlo bien
+
+	@RequestMapping("/registerUser")
+	private String userRegistration(Model model) {
+		model.addAttribute(RegistrationPage.ERROR_MESSAGE_ATTR, registrationErrorMessage);
+
+		return RegistrationPage.TEMPLATE_NAME;
+	}
+
+	@PostMapping("/registerUser/sendData")
+	private RedirectView receiveNewUserData(@RequestParam String username, @RequestParam String email,
+			@RequestParam String password, @RequestParam String name, @RequestParam String surname,
+			@RequestParam(required = false) boolean isSeller) {
+		registrationErrorMessage = null;
+
+		if (userRepository.findById(username).isPresent()) {
+			registrationErrorMessage = "Error: An user with that username already exists";
+			return new RedirectView("/registerUser");
+		}
+
+		User existingUserWithEmail = userRepository.findByUserEmail(email);
+		if (existingUserWithEmail != null) {
+			registrationErrorMessage = "Error: An user with that email already exists";
+			return new RedirectView("/registerUser");
+		}
+
+		User newUser = (isSeller) ? new Seller(username, email, name, surname, password)
+				: new User(username, email, username, surname, password);
+
+		userRepository.save(newUser);
+		try {
+			session.logIn(newUser);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new RedirectView("/testHomePage");
+	}
 }

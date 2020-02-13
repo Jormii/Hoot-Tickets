@@ -1,16 +1,9 @@
 package dad.hoottickets;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
-import dad.hoottickets.database.Event;
-import dad.hoottickets.database.Showing;
-import dad.hoottickets.database.Ticket;
+import dad.hoottickets.database.Seller;
 import dad.hoottickets.database.User;
 import dad.hoottickets.eventcreation.EventCreation;
 
@@ -34,13 +27,14 @@ public class ClientSession {
 		eventCreation.reset();
 	}
 
-	public void logIn(User user, boolean isSeller) throws Exception {
+	public void logIn(User user) throws Exception {
 		if (loggedIn) {
 			throw new Exception("Session already has a user logged in");
 		}
 
 		this.user = user;
-		this.isSeller = isSeller;
+		this.isSeller = user instanceof Seller;
+		this.loggedIn = true;
 	}
 
 	public void logOut() throws Exception {

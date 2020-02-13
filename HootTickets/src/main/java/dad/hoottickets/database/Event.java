@@ -1,7 +1,9 @@
 package dad.hoottickets.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,8 +33,8 @@ public class Event {
 	@JoinColumn(name = "sellerEvents")
 	private Seller eventSeller;
 
-	@OneToMany(mappedBy = "showingID.showingEvent")
-	private List<Showing> eventShowings;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Showing> eventShowings = new ArrayList<>();
 
 	public Event() {
 

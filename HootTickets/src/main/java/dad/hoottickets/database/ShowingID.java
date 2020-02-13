@@ -2,7 +2,6 @@ package dad.hoottickets.database;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
