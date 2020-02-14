@@ -19,7 +19,11 @@
 		<tr>
 			<td>Time: {{showingID.showingDate}}</td>
 			<td>/ Place: {{showingPlace}}</td>
-			<td><a href="/non_existent_url">Buy tickets</a></td>
+			<td><form method="POST" action="/testTicketSelectionPage">
+    <input type="hidden" name="ShowingDate" value="{{showingID.showingDate}}"/> 
+    <input type="hidden" name="ShowingEvent" value="{{showingID.showingEvent}}"/> 
+    <input type="submit" value="Submit" />
+</form></td>
 		</tr>
 	</table>
 	{{/eventShowingsList}}

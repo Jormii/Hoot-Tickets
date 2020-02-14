@@ -30,25 +30,11 @@ public class Ticket {
 
 	}
 
-	public Ticket(TicketID ticketID, int ticketPrice, int ticketTotalSeats) {
+	public Ticket(TicketID ticketID, int ticketPrice, int ticketTotalSeats, int ticketAvailableSeats) {
 		this.ticketID = ticketID;
 		this.ticketPrice = ticketPrice;
 		this.ticketTotalSeats = ticketTotalSeats;
-		this.ticketAvailableSeats = ticketTotalSeats;
-	}
-
-	/*
-	 * hashCode() and equals()
-	 */
-
-	@Override
-	public int hashCode() {
-		return ticketID.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return ticketID.equals(obj);
+		this.ticketAvailableSeats = ticketAvailableSeats;
 	}
 
 	/*

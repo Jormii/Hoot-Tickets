@@ -5,24 +5,30 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<body>
 	<h5>Nombre del evento: {{eventName}}</h5>
 	
 	<h5>La sesión ocurre el día: {{showingTime}}</h5>
 	<h5>La sesión tiene lugar en: {{showingPlace}}</h5>
 	
 	<h5>Entradas seleccionadas a continuación</h5>
+	<form method="POST" action="/testFinishedCheckoutPage">
+	<input type="hidden" name="ShowingDate" value="{{showingTime}}"/> 
+    <input type="hidden" name="ShowingEvent" value="{{eventName}}"/> 
+    
+	{{#ticketsSelected}}
 	<table>
-		{{#ticketsSelected}}
-		<tr>
-			<td>Ticket name: {{ticketID.ticketName}}</td>
-			<td>Ticket price: {{ticketPrice}}</td>
-			<td>Ticket quantity: TODO: Indicar cuántas</td> <!-- TODO: Meter cantidad elegida -->
-		</tr>
-		{{/ticketsSelected}}
-	</table>
 	
+		<tr>
+			<td>Ticket name: {{fst.ticketID.ticketName}}</td>
+			<td>Ticket price: {{fst.ticketPrice}}</td>
+			<td>Ticket quantity:{{snd}}</td>
+			<input type="hidden" name="seat[]" value="{{snd}}"/>
+		</tr>
+		
+	</table>
+	{{/ticketsSelected}}
 	<p></p>
-	<form action="complete_checkout">
 		<table>
 			<tr>
 				<td>Número de tarjeta</td>
@@ -36,8 +42,6 @@
 		
 		<button type="submit">Complete check-out</button>
 	</form>
-	
-<body>
 
 </body>
 

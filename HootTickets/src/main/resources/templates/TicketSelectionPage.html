@@ -14,6 +14,9 @@
 	<h3>Time: {{showingTime}}</h3>
 	<h3>Place: {{showingPlace}}</h3>
 	<h5>Seats available</h5>
+	<form method="POST" action="/testCheckoutPage">
+	<input type="hidden" name="ShowingDate" value="{{showingTime}}"/> 
+    <input type="hidden" name="ShowingEvent" value="{{eventName}}"/> 
 	{{#showingTicketsList}}
 	<table>
 		<tr>
@@ -23,18 +26,16 @@
 
 			<td><p>How many?</p></td>
 			<td>
-				<form>
-					<input type="text">
-				</form>
+				
+					<input type="number" name="seat[]" value=0 min=0 max={{ticketAvailableSeats}} required >
+				
 			</td>
 		</tr>
 	</table>
 	{{/showingTicketsList}}
-
-	<form action="submit">
-		<button type="submit" formaction="/ticketcheckout">Proceed to
-			check-out</button>
-	</form>
+		
+	 <input type="submit" value="Submit" />
+</form>
 </body>
 
 </html>
