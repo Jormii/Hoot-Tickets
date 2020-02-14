@@ -100,8 +100,8 @@ public class HootTicketsController {
 
 		eventRepository.save(event);
 
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 10:10:10"));
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 10:10"));
 		ShowingID showingID = new ShowingID(date, event.getEventName());
 		String showingPlace = "Lugar de la sesion";
 		Showing showing = new Showing(showingID, showingPlace,event);
@@ -162,7 +162,7 @@ public class HootTicketsController {
 
 	@PostMapping("/testTicketSelectionPage")
 	private String ticketSelectionPage(Model model,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(ShowingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
 		String eventName = showing.getShowingEvent().getEventName();
@@ -181,7 +181,7 @@ public class HootTicketsController {
 
 	@PostMapping("/testCheckoutPage")
 	private String checkoutPage(Model model,@RequestParam("seat[]") List<Integer> to,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(ShowingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
 		List<Ticket> showingTickets = showing.getShowingTickets();
@@ -205,7 +205,7 @@ public class HootTicketsController {
 
 	@PostMapping("/testFinishedCheckoutPage")
 	private String finishedCheckoutPage(Model model,@RequestParam("seat[]") List<Integer> to,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(ShowingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
 		int i=0;
