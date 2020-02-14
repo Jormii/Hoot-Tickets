@@ -10,6 +10,14 @@
 
 </head>
 <body>
+	<a href="/eventCreation">Create event</a>
+	{{#loggedIn}}
+	<p>Welcome, {{username}}</p>
+	{{/loggedIn}}
+	{{^loggedIn}}
+	<a href="/registerUser">Registrarse en el sitio</a>
+	{{/loggedIn}}
+	
 	<div class="container text-center">
 		<h1>Events list</h1>
 		<table>

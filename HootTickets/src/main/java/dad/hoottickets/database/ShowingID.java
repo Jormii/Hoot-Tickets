@@ -1,6 +1,7 @@
 package dad.hoottickets.database;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Embeddable;
@@ -15,7 +16,7 @@ public class ShowingID implements Serializable {
 	 */
 	private static final long serialVersionUID = 9015996705336309459L;
 
-	private Date showingDate;
+	private LocalDateTime showingDate;
 
 
 	private String showingEvent;
@@ -24,7 +25,7 @@ public class ShowingID implements Serializable {
 
 	}
 
-	public ShowingID(Date showingDate,String showingEvent) {
+	public ShowingID(LocalDateTime showingDate,String showingEvent) {
 		this.showingDate = showingDate;
 		this.showingEvent = showingEvent;
 	}
@@ -68,11 +69,11 @@ public class ShowingID implements Serializable {
 	 * Getters and setters
 	 */
 
-	public Date getShowingDate() {
+	public LocalDateTime getShowingDate() {
 		return showingDate;
 	}
 
-	public void setShowingDate(Date showingDate) {
+	public void setShowingDate(LocalDateTime showingDate) {
 		this.showingDate = showingDate;
 	}
 
