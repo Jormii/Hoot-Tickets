@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Event Page</title>
+</head>
+
+<body>
+	<h1>{{eventName}}</h1>
+	<h3>Summary</h3>
+	<p>{{eventSummary}}</p>
+	<p></p>
+	<h5>Description</h5>
+	<p>{{eventDescription}}</p>
+	<h5>Days available</h5>
+	{{#eventShowingsList}}
+	<table>
+		<tr>
+			<td>Time: {{showingID.showingDate}}</td>
+			<td>/ Place: {{showingPlace}}</td>
+			<td><form method="POST" action="/testTicketSelectionPage">
+    <input type="hidden" name="ShowingDate" value="{{showingID.showingDate}}"/> 
+    <input type="hidden" name="ShowingEvent" value="{{showingID.showingEvent}}"/> 
+    <input type="submit" value="Submit" />
+</form></td>
+		</tr>
+	</table>
+	{{/eventShowingsList}}
+	{{^eventShowingsList}}
+	<p>No days available yet</p>
+	{{/eventShowingsList}}
+</body>
+
+</html>

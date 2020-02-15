@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<title>Hoot Tickets</title>
+<!-- Bootstrap core CSS -->
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+	<a href="/eventCreation">Create event</a>
+	{{#loggedIn}}
+	<p>Welcome, {{username}}</p>
+	{{/loggedIn}}
+	{{^loggedIn}}
+	<a href="/registerUser">Registrarse en el sitio</a>
+	{{/loggedIn}}
+	
+	<div class="container text-center">
+		<h1>Events list</h1>
+		<table>
+			{{#eventsList}}
+			<tr>
+				<td>Nombre del evento: {{eventName}}</td>
+				<td>Resumen del evento: {{eventSummary}}</td>
+				<td><form action="testEventPage" method="post">
+				<input type="hidden" name="eventID" value="{{eventID}}"/>
+				<input type="submit" value="sesiones"/>
+				</form></td>
+			</tr>
+
+			{{/eventsList}}
+		</table>
+	</div>
+</body>
+</html>
