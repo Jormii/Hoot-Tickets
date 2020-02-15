@@ -24,7 +24,7 @@ public class Seller extends User {
 	/*
 	 * Getters and setters
 	 */
-	
+
 	public List<Event> getSellerEvents() {
 		return sellerEvents;
 	}

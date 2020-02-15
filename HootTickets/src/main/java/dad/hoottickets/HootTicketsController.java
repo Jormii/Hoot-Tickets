@@ -1,11 +1,9 @@
 package dad.hoottickets;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -103,7 +100,7 @@ public class HootTicketsController {
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 10:10"));
 		ShowingID showingID = new ShowingID(date, event.getEventName());
 		String showingPlace = "Lugar de la sesion";
-		Showing showing = new Showing(showingID, showingPlace,event);
+		Showing showing = new Showing(showingID, showingPlace, event);
 
 		showingRepository.save(showing);
 
@@ -143,14 +140,12 @@ public class HootTicketsController {
 
 	@PostMapping("/testEventPage")
 	private String eventPageTest(Model model, @RequestParam int eventID) {
-		//System.out.println(eventID);
-		//int eventIDAsInt = Integer.parseInt(eventID);
-
 		Event event = eventRepository.findById(eventID).get();
 		String eventName = event.getEventName();
 		String eventSummary = event.getEventSummary();
 		String eventDescription = event.getEventDescription();
 		List<Showing> eventShowings = event.getEventShowings();
+
 		model.addAttribute(TemplatesAttributes.EventPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.EventPage.EVENT_SUMMARY_ATTR, eventSummary);
 		model.addAttribute(TemplatesAttributes.EventPage.EVENT_DESCRIPTION_ATTR, eventDescription);
@@ -160,10 +155,11 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("/testTicketSelectionPage")
-	private String ticketSelectionPage(Model model,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
+	private String ticketSelectionPage(Model model, @RequestParam String showingDate, @RequestParam String showingEvent)
+			throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(ShowingDate));
-		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
+		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
 		String eventName = showing.getShowingEvent().getEventName();
 		String eventSummary = showing.getShowingEvent().getEventSummary();
 		String showingPlace = showing.getShowingPlace();
@@ -171,7 +167,7 @@ public class HootTicketsController {
 
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
-		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, ShowingDate);
+		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, showingDate);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TICKETS_ATTR, showingTickets);
 
@@ -179,46 +175,48 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("/testCheckoutPage")
-	private String checkoutPage(Model model,@RequestParam("seat[]") List<Integer> to,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
+	private String checkoutPage(Model model, @RequestParam("seat[]") List<Integer> to, @RequestParam String showingDate,
+			@RequestParam String showingEvent) throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(ShowingDate));
-		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
+		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
 		List<Ticket> showingTickets = showing.getShowingTickets();
-		List<Pair<Ticket,Integer>> map= new ArrayList<Pair<Ticket,Integer>>();
-		int i=0;
-		for(Ticket ticket : showingTickets) {
-			Pair<Ticket,Integer> pair=Pair.of(ticket,to.get(i));
-			
-		map.add(pair);
-		i++;
+		List<Pair<Ticket, Integer>> map = new ArrayList<Pair<Ticket, Integer>>();
+		int i = 0;
+		for (Ticket ticket : showingTickets) {
+			Pair<Ticket, Integer> pair = Pair.of(ticket, to.get(i));
+
+			map.add(pair);
+			i++;
 		}
-		
+
 		String eventName = showing.getShowingEvent().getEventName();
-		String showingPlace =showing.getShowingPlace();
+		String showingPlace = showing.getShowingPlace();
 		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
-		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, ShowingDate);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingDate);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_ATTR, map);
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}
 
 	@PostMapping("/testFinishedCheckoutPage")
-	private String finishedCheckoutPage(Model model,@RequestParam("seat[]") List<Integer> to,@RequestParam String ShowingDate,@RequestParam String ShowingEvent) throws ParseException {
+	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
+			@RequestParam String showingDate, @RequestParam String showingEvent) throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(ShowingDate));
-		Showing showing = showingRepository.findById(new ShowingID(date,ShowingEvent)).get();
-		int i=0;
-		for(int seat : to) {
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
+		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
+		int i = 0;
+		for (int seat : to) {
 			System.out.println(seat);
 		}
 		List<Ticket> showingTickets = showing.getShowingTickets();
-		User user= userRepository.findAll().get(0);
-		for(Ticket ticket : showingTickets) {
-			if(to.get(i)!= 0) {
+		User user = userRepository.findAll().get(0);
+		for (Ticket ticket : showingTickets) {
+			if (to.get(i) != 0) {
 				TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
-				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID,to.get(i));
+				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i));
 				ticketPurchaseRepository.save(ticketPurchase);
-				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats()-to.get(i));
+				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats() - to.get(i));
 				ticketRepository.save(ticket);
 			}
 			i++;
@@ -340,7 +338,7 @@ public class HootTicketsController {
 		for (ProvisionalShowing provisionalEvent : eventCreation.getProvisionalShowings()) {
 			LocalDateTime showingDate = LocalDateTime.parse(provisionalEvent.getShowingDate(), dateFormat);
 			ShowingID showingID = new ShowingID(showingDate, event.getEventName());
-			Showing showing = new Showing(showingID, provisionalEvent.getShowingPlace(),event);
+			Showing showing = new Showing(showingID, provisionalEvent.getShowingPlace(), event);
 
 			showings.add(showing);
 		}

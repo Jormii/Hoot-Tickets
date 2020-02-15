@@ -2,11 +2,8 @@ package dad.hoottickets.database;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Embeddable
 public class ShowingID implements Serializable {
@@ -18,14 +15,13 @@ public class ShowingID implements Serializable {
 
 	private LocalDateTime showingDate;
 
-
 	private String showingEvent;
 
 	public ShowingID() {
 
 	}
 
-	public ShowingID(LocalDateTime showingDate,String showingEvent) {
+	public ShowingID(LocalDateTime showingDate, String showingEvent) {
 		this.showingDate = showingDate;
 		this.showingEvent = showingEvent;
 	}
