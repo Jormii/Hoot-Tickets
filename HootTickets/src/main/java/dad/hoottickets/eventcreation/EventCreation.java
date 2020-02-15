@@ -16,7 +16,7 @@ public class EventCreation {
 	public void addShowingToEvent(ProvisionalShowing showing) {
 		provisionalEvent.addProvisionalShowing(showing);
 	}
-	
+
 	public void addTicketToShowing(int showingIndex, ProvisionalTicket ticket) {
 		ProvisionalShowing showing = provisionalEvent.getProvisionalShowings().get(showingIndex);
 		showing.addTicket(ticket);

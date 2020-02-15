@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Embeddable
 public class ShowingID implements Serializable {
@@ -17,15 +15,13 @@ public class ShowingID implements Serializable {
 
 	private LocalDateTime showingDate;
 
-	@ManyToOne()
-	@JoinColumn(name = "eventShowings")
-	private Event showingEvent;
+	private String showingEvent;
 
 	public ShowingID() {
 
 	}
 
-	public ShowingID(LocalDateTime showingDate, Event showingEvent) {
+	public ShowingID(LocalDateTime showingDate, String showingEvent) {
 		this.showingDate = showingDate;
 		this.showingEvent = showingEvent;
 	}
@@ -77,11 +73,11 @@ public class ShowingID implements Serializable {
 		this.showingDate = showingDate;
 	}
 
-	public Event getShowingEvent() {
+	public String getShowingEvent() {
 		return showingEvent;
 	}
 
-	public void setShowingEvent(Event showingEvent) {
+	public void setShowingEvent(String showingEvent) {
 		this.showingEvent = showingEvent;
 	}
 
