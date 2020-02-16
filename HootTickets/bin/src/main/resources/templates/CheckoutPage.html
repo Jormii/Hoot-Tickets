@@ -13,17 +13,17 @@
 	
 	<h5>Entradas seleccionadas a continuación</h5>
 	<form method="POST" action="/testFinishedCheckoutPage">
-	<input type="hidden" name="showingDate" value="{{showingTime}}"/> 
-    <input type="hidden" name="showingEvent" value="{{eventName}}"/> 
+	<input type="hidden" name="ShowingDate" value="{{showingTime}}"/> 
+    <input type="hidden" name="ShowingEvent" value="{{eventName}}"/> 
     
 	{{#ticketsSelected}}
 	<table>
 	
 		<tr>
-			<td>Ticket name: {{getFirst.ticketID.ticketName}}</td>
-			<td>Ticket price: {{getFirst.ticketPrice}}</td>
-			<td>Ticket quantity:{{getSecond}}</td>
-			<input type="hidden" name="seat[]" value="{{getSecond}}"/>
+			<td>Ticket name: {{fst.ticketID.ticketName}}</td>
+			<td>Ticket price: {{fst.ticketPrice}}</td>
+			<td>Ticket quantity:{{snd}}</td>
+			<input type="hidden" name="seat[]" value="{{snd}}"/>
 		</tr>
 		
 	</table>

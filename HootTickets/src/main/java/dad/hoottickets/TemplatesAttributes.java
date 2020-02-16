@@ -81,9 +81,6 @@ public class TemplatesAttributes {
 		public static final String TEMPLATE_NAME = "EventCreatedPage";
 	}
 
-	/*
-	 * Registration page
-	 */
 	public static class RegistrationPage {
 
 		public static final String TEMPLATE_NAME = "RegistrationPage";

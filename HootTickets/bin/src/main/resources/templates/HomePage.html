@@ -10,13 +10,12 @@
 
 </head>
 <body>
-	<p><a href="/eventCreation">Create event</a><p>
-	<p><a href="/user/myTickets">My tickets bought</a><p>
+	<a href="/eventCreation">Create event</a>
 	{{#loggedIn}}
 	<p>Welcome, {{username}}</p>
 	{{/loggedIn}}
 	{{^loggedIn}}
-	<p><a href="/registerUser">Registrarse en el sitio</a></p>
+	<a href="/registerUser">Registrarse en el sitio</a>
 	{{/loggedIn}}
 	
 	<div class="container text-center">

@@ -11,10 +11,6 @@ import dad.hoottickets.eventcreation.EventCreation;
 @SessionScope
 public class ClientSession {
 
-	public static class EventCreationStruct {
-
-	}
-
 	private User user;
 	private boolean loggedIn;
 	private boolean isSeller;

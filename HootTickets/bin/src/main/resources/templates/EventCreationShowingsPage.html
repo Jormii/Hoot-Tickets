@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+	<p>Creating event with name {{eventName}}</p>
+	<p>Summary: {{eventSummary}}</p>
+	<p>Description: {{eventDescription}}</p>
+	<br>
+	<p>Current showings</p>
+	{{#provisionalShowings}}
+		<p>Showing number {{-index}}</p>
+		<p>Takes place {{showingDate}}/{{showingPlace}}</p>
+		{{#provisionalTickets}}
+			<p>Ticket number {{-index}}: {{ticketName}}, {{ticketAmount}} tickets, {{ticketPrice}} $ each</p>
+		{{/provisionalTickets}}
+		{{^provisionalTickets}}
+			<p>This session has no tickets yet</p>
+		{{/provisionalTickets}}
+		<form action="/eventCreation/createTicket" method="post">
+			<input type="hidden" name="showingIndex" value="{{-index}}">
+			<button type="submit">Create ticket for this showing</button>
+		</form>
+		<br>
+		<p>------------------</p>
+	{{/provisionalShowings}}
+	{{^provisionalShowings}}
+		<p>No showings created yet</p>
+	{{/provisionalShowings}}
+	
+	<br>
+	<form action="/eventCreation/createShowing">
+		<button type="submit">Create showing</button>
+	</form>
+	<br>
+	<form action="/eventCreation/checkIfValid" method="post">
+		<button type="submit">Create event</button>
+	</form>
+</body>
+
+</html>
