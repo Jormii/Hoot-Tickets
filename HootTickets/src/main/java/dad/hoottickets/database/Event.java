@@ -1,5 +1,6 @@
 package dad.hoottickets.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,7 +33,7 @@ public class Event {
 	private Seller eventSeller;
 
 	@OneToMany(mappedBy = "showingEvent")
-	private List<Showing> eventShowings;
+	private List<Showing> eventShowings = new ArrayList<>();
 
 	public Event() {
 

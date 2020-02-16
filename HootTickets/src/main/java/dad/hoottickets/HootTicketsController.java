@@ -25,6 +25,7 @@ import dad.hoottickets.TemplatesAttributes.HomePage;
 import dad.hoottickets.TemplatesAttributes.RegistrationPage;
 import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
 import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
+import dad.hoottickets.TemplatesAttributes.UserTicketsPage;
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.EventRepository;
 import dad.hoottickets.database.Seller;
@@ -34,9 +35,9 @@ import dad.hoottickets.database.ShowingRepository;
 import dad.hoottickets.database.Ticket;
 import dad.hoottickets.database.TicketID;
 import dad.hoottickets.database.TicketPurchase;
-import dad.hoottickets.database.TicketPurchaseID;
 import dad.hoottickets.database.TicketPurchaseRepository;
 import dad.hoottickets.database.TicketRepository;
+import dad.hoottickets.database.TicketPurchaseUniqueID;
 import dad.hoottickets.database.User;
 import dad.hoottickets.database.UserRepository;
 import dad.hoottickets.eventcreation.EventCreation;
@@ -110,13 +111,25 @@ public class HootTicketsController {
 		int ticketTotalSeats = 100;
 		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats);
 
-		ticketRepository.save(ticket);
+		String ticketName_2 = "Nombre de otra entrada";
+		TicketID ticketID_2 = new TicketID(ticketName_2, showing);
+		int ticketPrice_2 = 20;
+		int ticketTotalSeats_2 = 50;
+		Ticket ticket_2 = new Ticket(ticketID_2, ticketPrice_2, ticketTotalSeats_2);
 
-		TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
+		ticketRepository.save(ticket);
+		ticketRepository.save(ticket_2);
+
+		TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(madeUpSeller, ticket);
 		int quantity = 1;
 		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity);
 
+		TicketPurchaseUniqueID ticketPurchaseID_2 = new TicketPurchaseUniqueID(madeUpSeller, ticket_2);
+		int quantity_2 = 2;
+		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2);
+
 		ticketPurchaseRepository.save(ticketPurchase);
+		ticketPurchaseRepository.save(ticketPurchase_2);
 	}
 
 	private void updateHTTPSession(HttpSession httpSession) {
@@ -213,7 +226,7 @@ public class HootTicketsController {
 		User user = userRepository.findAll().get(0);
 		for (Ticket ticket : showingTickets) {
 			if (to.get(i) != 0) {
-				TicketPurchaseID ticketPurchaseID = new TicketPurchaseID(user, ticket);
+				TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(user, ticket);
 				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i));
 				ticketPurchaseRepository.save(ticketPurchase);
 				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats() - to.get(i));
@@ -420,4 +433,35 @@ public class HootTicketsController {
 
 		return new RedirectView("/testHomePage");
 	}
+
+	/*
+	 * Ticket refund
+	 */
+
+	@RequestMapping("/user/myTickets")
+	private String listUserTickets(Model model) {
+		// TODO: Sacar el usuario de la sesión
+		User user = madeUpSeller;
+		List<TicketPurchase> purchases = ticketPurchaseRepository.findByTicketPurchaseUniqueID_User(user);
+
+		model.addAttribute(UserTicketsPage.TICKETS_BOUGHT_ATTR, purchases);
+
+		return UserTicketsPage.TEMPLATE_NAME;
+	}
+
+	@PostMapping("/user/refundTicket")
+	private RedirectView refundTicket(@RequestParam long ticketPurchaseID) {
+		TicketPurchase purchase = ticketPurchaseRepository.findById(ticketPurchaseID).get();
+		Ticket ticket = purchase.getTicketPurchaseUniqueID().getTicket();
+
+		int seatsLeft = ticket.getTicketAvailableSeats();
+		int seatsBought = purchase.getQuantity();
+		ticket.setTicketAvailableSeats(seatsBought + seatsLeft);
+
+		ticketRepository.save(ticket);
+		ticketPurchaseRepository.deleteById(ticketPurchaseID);
+
+		return new RedirectView("/user/myTickets");
+	}
+
 }

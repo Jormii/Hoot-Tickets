@@ -87,5 +87,15 @@ public class TemplatesAttributes {
 
 		public static final String ERROR_MESSAGE_ATTR = "errorMessage";
 	}
+	
+	/*
+	 * Ticket refund
+	 */
+	public static class UserTicketsPage {
+		
+		public static final String TEMPLATE_NAME = "UserTicketsPage";
+		
+		public static final String TICKETS_BOUGHT_ATTR = "ticketsBought";
+	}
 
 }
