@@ -3,31 +3,31 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Hoot Tickets - Sign up</title>
 </head>
 	{{#errorMessage}}
 	<h5>{{errorMessage}}</h5>
 	{{/errorMessage}}
 	
 	<form action="/registerUser/sendData" method="post">
-		<label>Enter your username: </label>
+		<label>Enter your username: *</label>
 		<input type="text" name="username" required="required">
 		<br>
-		<label>Enter your email: </label>
+		<label>Enter your email: *</label>
 		<input type="text" name="email" required="required">
 		<br>
-		<label>Enter your password: </label>
+		<label>Enter your password: *</label>
 		<input type="password" name="password" required="required">
 		<br>
 		<label>Enter your name: </label>
 		<input type="text" name="name" required="required">
 		<br>
-		<label>Enter your surname: </label>
+		<label>Enter your surname: *</label>
 		<input type="text" name="surname" required="required">
 		<br>
-		<label>Are you a seller? </label>
+		<label>Are you a seller?</label>
 		<input type="checkbox" name="isSeller">
-		<br>
+		<br><br>
 		<button type="submit">Create account</button>
 	</form>
 <body>

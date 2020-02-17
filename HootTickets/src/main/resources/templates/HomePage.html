@@ -7,33 +7,34 @@
 <title>Hoot Tickets</title>
 <!-- Bootstrap core CSS -->
 <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
+
 <body>
-	<p><a href="/eventCreation">Create event</a><p>
-	<p><a href="/user/myTickets">My tickets bought</a><p>
 	{{#loggedIn}}
 	<p>Welcome, {{username}}</p>
+	{{/loggedIn}} {{^loggedIn}}
+	<p>
+		<a href="/registerUser">Sign up</a>
+	</p>
 	{{/loggedIn}}
-	{{^loggedIn}}
-	<p><a href="/registerUser">Registrarse en el sitio</a></p>
-	{{/loggedIn}}
-	
+	<p>
+		<a href="/eventCreation">Create a new event</a>
+	<p>
+	<p>
+		<a href="/user/myTickets">My tickets bought</a>
+	<p>
 	<div class="container text-center">
-		<h1>Events list</h1>
-		<table>
-			{{#eventsList}}
-			<tr>
-				<td>Nombre del evento: {{eventName}}</td>
-				<td>Resumen del evento: {{eventSummary}}</td>
-				<td><form action="testEventPage" method="post">
-				<input type="hidden" name="eventID" value="{{eventID}}"/>
-				<input type="submit" value="sesiones"/>
-				</form></td>
-			</tr>
-
-			{{/eventsList}}
-		</table>
+		<h1>Next events</h1>
+		<p>-------</p>
+		{{#eventsList}}
+		<h4>{{eventName}}</h4>
+		<p>{{eventSummary}}</p>
+		<form action="testEventPage" method="post">
+			<input type="hidden" name="eventID" value="{{eventID}}" /> <input
+				type="submit" value="Check showings" />
+		</form>
+		<p>-------</p>
+		{{/eventsList}}
 	</div>
 </body>
 </html>

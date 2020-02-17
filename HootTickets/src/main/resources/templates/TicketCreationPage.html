@@ -3,22 +3,23 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Hook Tickets - New event</title>
 </head>
 
 <body>
-	<p>Creating ticket for showing taking place {{showingDate}}/{{showingPlace}}</p>
+	<p>Creating ticket for showing taking place {{showingDate}}, in {{showingPlace}}</p>
+	<p></p>
 	<form action="/eventCreation/sendTicketData" method="post">
 		<input type="hidden" name="showingIndex" value="{{showingIndex}}">
-		<label>What's the name of this ticket?</label>
+		<label>What's the name of this ticket?*</label>
 		<input type="text" name="ticketName" required="required">
 		<br>
-		<label>How many of these tickets are in sale?</label>
+		<label>How many of these tickets are in sale?*</label>
 		<input type="number" name="ticketAmount" required="required">
 		<br>
-		<label>What's the price of this ticket?</label>
+		<label>What's the price of this ticket?*</label>
 		<input type="number" name="ticketPrice" required="required">
-		<br>
+		<br><br>
 		<button type="submit">Create ticket</button>
 	</form>
 </body>

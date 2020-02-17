@@ -3,15 +3,16 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Hoot Tickets - New event</title>
 </head>
 
 <body>
-	<p>Creating event with name {{eventName}}</p>
+	<p>Creating event with name: {{eventName}}</p>
 	<p>Summary: {{eventSummary}}</p>
 	<p>Description: {{eventDescription}}</p>
 	<br>
-	<p>Current showings</p>
+	<h5>Current showings</h5>
+	<p>----------</p>
 	{{#provisionalShowings}}
 		<p>Showing number {{-index}}</p>
 		<p>Takes place {{showingDate}}/{{showingPlace}}</p>
@@ -25,18 +26,16 @@
 			<input type="hidden" name="showingIndex" value="{{-index}}">
 			<button type="submit">Create ticket for this showing</button>
 		</form>
-		<br>
-		<p>------------------</p>
+		<p>----------</p>
 	{{/provisionalShowings}}
 	{{^provisionalShowings}}
 		<p>No showings created yet</p>
 	{{/provisionalShowings}}
 	
-	<br>
 	<form action="/eventCreation/createShowing">
 		<button type="submit">Create showing</button>
 	</form>
-	<br>
+	<p>----------</p>
 	<form action="/eventCreation/checkIfValid" method="post">
 		<button type="submit">Create event</button>
 	</form>

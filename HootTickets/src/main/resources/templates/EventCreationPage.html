@@ -3,19 +3,21 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Hoot Tickets - New event</title>
 </head>
 
 <body>
 	<form method="post" action="/eventCreation/sendEventData">
-		<label>Event name: </label>
+		<label>Event name*: </label>
 		<input type="text" name="eventName" required="required"></input>
 		<br><br>
-		<label>Event summary: </label>
+		<label>Event summary*: </label>
 		<textarea name="eventSummary" rows="2" cols="50" required="required"></textarea>
 		<br><br>
-		<label>Event description (optional):</label>
+		<label>Event description:</label>
 		<textarea name="eventDescription" rows="5" cols="50"></textarea>
+		<br><br>
+		<p>Fields marked with "*" are mandatory</p>
 		<br><br>
 		<button type="submit">Start event creation</button>
 	</form>
