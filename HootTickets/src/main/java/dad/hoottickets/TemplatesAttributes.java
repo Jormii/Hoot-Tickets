@@ -81,18 +81,21 @@ public class TemplatesAttributes {
 		public static final String TEMPLATE_NAME = "EventCreatedPage";
 	}
 
-	/*
-	 * Registration page
-	 */
 	public static class RegistrationPage {
 
 		public static final String TEMPLATE_NAME = "RegistrationPage";
 
 		public static final String ERROR_MESSAGE_ATTR = "errorMessage";
 	}
-	public static class InicioPage {
-
-		public static final String TEMPLATE_NAME = "InicioPage";
+	
+	/*
+	 * Ticket refund
+	 */
+	public static class UserTicketsPage {
+		
+		public static final String TEMPLATE_NAME = "UserTicketsPage";
+		
+		public static final String TICKETS_BOUGHT_ATTR = "ticketsBought";
 	}
 
 }
