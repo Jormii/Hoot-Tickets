@@ -7,6 +7,7 @@
   - [Funcionalidad](#funcionalidad)
   - [Entidades principales](#entidades)
 - [Equipo](#equipo)
+- [Diagrama de navegación](#navegacion)
 
 ## Introducción<a name="introduccion"></a>
 Hoot Tickets es una página para la compra y venta de entradas de eventos musicales.
@@ -44,3 +45,11 @@ Nombre y apellidos | Correo | Cuenta de GitHub
 Jorge López Natal | j.lopezn.2016@alumnos.urjc.es | https://github.com/Jormii
 José Luis Rodríguez Corcho| jl.rodriguezc.2016@alumnos.urjc.es | https://github.com/huros35
 Yolanda Gómez Henche | y.gomezh@alumnos.urjc.es | https://github.com/yolandagomezh
+
+## Diagrama de navegación<a name="navegacion"></a>
+![alt text](https://i.imgur.com/bUqDjKc.png "Diagrama de navegación")
+
+A 18 de febrero, no se han implementado:
+- Inicio de sesión
+- Búsqueda/filtrado
+- Edición de eventos
