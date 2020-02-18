@@ -8,6 +8,7 @@
   - [Entidades principales](#entidades)
 - [Equipo](#equipo)
 - [Diagrama de navegación](#navegacion)
+- [Diagrama Entidad-Relación](#diagramaER)
 - [Capturas de pantalla](#capturas)
   - [Página principal](#capturasPrincipal)
   - [Proceso de compra](#capturasCompra)
@@ -59,6 +60,9 @@ A 18 de febrero, no se han implementado:
 - Inicio de sesión.
 - Búsqueda/filtrado.
 - Edición de eventos.
+
+## Diagrama Entidad-Relación<a name="diagramaER"></a>
+![alt text](https://i.imgur.com/BNdHln5.jpg "Diagrama ER")
 
 ## Capturas de pantalla<a name="capturas"></a>
 ### Página principal<a name="capturasPrincipal"></a>
