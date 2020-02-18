@@ -8,6 +8,12 @@
   - [Entidades principales](#entidades)
 - [Equipo](#equipo)
 - [Diagrama de navegación](#navegacion)
+- [Capturas de pantalla](#capturas)
+  - [Página principal](#capturasPrincipal)
+  - [Proceso de compra](#capturasCompra)
+  - [Proceso de creación de eventos](#capturasCreacion)
+  - [Devolución de entradas](#capturasDevolucion)
+  - [Registro de usuario](#capturasRegistro)
 
 ## Introducción<a name="introduccion"></a>
 Hoot Tickets es una página para la compra y venta de entradas de eventos musicales.
@@ -50,6 +56,57 @@ Yolanda Gómez Henche | y.gomezh@alumnos.urjc.es | https://github.com/yolandagom
 ![alt text](https://i.imgur.com/bUqDjKc.png "Diagrama de navegación")
 
 A 18 de febrero, no se han implementado:
-- Inicio de sesión
-- Búsqueda/filtrado
-- Edición de eventos
+- Inicio de sesión.
+- Búsqueda/filtrado.
+- Edición de eventos.
+
+## Capturas de pantalla<a name="capturas"></a>
+### Página principal<a name="capturasPrincipal"></a>
+![alt text](https://i.imgur.com/sJ3RMr4.png "Página principal")
+Desde aquí se puede acceder a todos los eventos ofertados y a las opciones de usuario.
+
+### Compra de entradas<a name="capturasCompra"></a>
+##### Información del evento
+![alt text](https://i.imgur.com/bfc6URr.png "Información del evento")
+Aquí se muestra toda la información de un evento junto con las sesiones que se celebran.
+
+##### Información de la sesión y selección de tickets
+![alt text](https://i.imgur.com/wUhXcp5.png "Sesión y sus tickets")
+Muestra información de la sesión y lista los tickets a la venta para proceder a la compra.
+
+##### Pantalla de pago
+![alt text](https://i.imgur.com/lbbOKdX.png "Pantalla de pago")
+Lista los tickets seleccionados y ofrece un formulario para realizar el pago.
+
+##### Pantalla de pago realizado
+![alt text](https://i.imgur.com/gWhjVYW.png "Pago realizado")
+Avisa al usuario de que el pago se ha realizado correctamente.
+
+### Creación de eventos<a name="capturasCreacion"></a>
+##### Formulario inicial
+![alt text](https://i.imgur.com/7Usgtgt.png "Formulario inicial")
+Un formulario inicial que pide los detalles básicos del nuevo evento.
+
+##### Creación del evento en detalle
+![alt text](https://i.imgur.com/JVk0Y5f.png "Creación de evento")
+Permite crear nuevas sesiones y entradas.
+
+##### Creación de sesión
+![alt text](https://i.imgur.com/J5ZyLtr.png "Creación de sesión")
+Pregunta por los campos necesarios para crear una sesión.
+
+##### Creación de entrada
+![ælt text](https://i.imgur.com/3nGnVtO.png "Creación de entrada")
+Pregunta por los campos necesarios para crear una entrada.
+
+##### Creación de evento exitosa
+![alt text](https://i.imgur.com/ZPsFkdY.png "Creación exitosa")
+Avisa al usuario de que el evento ha sido creado exitosamente.
+
+### Pantalla de devolución de entradas<a name="capturasDevolucion"></a>
+![alt text](https://i.imgur.com/zBVmvHr.png "Devolución de entradas")
+Permite a un usuario registrado reembolsar una compra realizada.
+
+### Pantalla de registro de usuario<a name="capturasRegistro"></a>
+![alt text](https://i.imgur.com/dASGcQf.png "Registro de usuario")
+Permite a un usuario registrarse en el sitio.
