@@ -122,11 +122,11 @@ public class HootTicketsController {
 
 		TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(madeUpSeller, ticket);
 		int quantity = 1;
-		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity);
+		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity, "XXXXX");
 
 		TicketPurchaseUniqueID ticketPurchaseID_2 = new TicketPurchaseUniqueID(madeUpSeller, ticket_2);
 		int quantity_2 = 2;
-		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2);
+		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2, "XXXXX");
 
 		ticketPurchaseRepository.save(ticketPurchase);
 		ticketPurchaseRepository.save(ticketPurchase_2);
@@ -214,7 +214,8 @@ public class HootTicketsController {
 
 	@PostMapping("/testFinishedCheckoutPage")
 	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
-			@RequestParam String showingDate, @RequestParam String showingEvent) throws ParseException {
+			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String creditCard)
+			throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
@@ -227,7 +228,7 @@ public class HootTicketsController {
 		for (Ticket ticket : showingTickets) {
 			if (to.get(i) != 0) {
 				TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(user, ticket);
-				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i));
+				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i), creditCard);
 				ticketPurchaseRepository.save(ticketPurchase);
 				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats() - to.get(i));
 				ticketRepository.save(ticket);
