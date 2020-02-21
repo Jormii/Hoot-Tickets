@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="Huros (generated)" id="1581975372045-1">
+        <createTable tableName="event">
+            <column name="eventid" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_description" type="VARCHAR(255)"/>
+            <column name="event_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_summary" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seller_events" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-2">
+        <createTable tableName="hibernate_sequence">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-3">
+        <createTable tableName="showing">
+            <column name="showing_date" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="showing_event" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="showing_place" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_showings" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-4">
+        <createTable tableName="ticket">
+            <column name="ticket_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_available_seats" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_total_seats" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="showingid_showing_date" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="showingid_showing_eventid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-5">
+        <createTable tableName="ticket_purchase">
+            <column name="purchaseid" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticketid_ticket_name" type="VARCHAR(255)"/>
+            <column name="ticketid_showingid_showing_date" type="datetime(6)"/>
+            <column name="ticketid_showingid_showing_evenid" type="VARCHAR(255)"/>
+            <column name="user_username" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-6">
+        <createTable tableName="user">
+            <column name="dtype" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-7">
+        <addPrimaryKey columnNames="eventid" constraintName="PRIMARY" tableName="event"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-8">
+        <addPrimaryKey columnNames="showing_date, showing_event" constraintName="PRIMARY" tableName="showing"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-9">
+        <addPrimaryKey columnNames="ticket_name, showingid_showing_date, showingid_showing_eventid" constraintName="PRIMARY" tableName="ticket"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-10">
+        <addPrimaryKey columnNames="purchaseid" constraintName="PRIMARY" tableName="ticket_purchase"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-11">
+        <addPrimaryKey columnNames="user_username" constraintName="PRIMARY" tableName="user"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-12">
+        <addUniqueConstraint columnNames="user_email" constraintName="UK_j09k2v8lxofv2vecxu2hde9so" tableName="user"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-13">
+        <addUniqueConstraint columnNames="event_name" constraintName="UK_pv13n3n7ggmpvk1rsfqi7r15l" tableName="event"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-14">
+        <createIndex indexName="FKe4xuaxurcs1kvs9xebtnhimnl" tableName="ticket_purchase">
+            <column name="ticketid_ticket_name"/>
+            <column name="ticketid_showingid_showing_date"/>
+            <column name="ticketid_showingid_showing_evenid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-15">
+        <createIndex indexName="FKeolq1kf2tttcxm7sfqejbnc46" tableName="showing">
+            <column name="event_showings"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-16">
+        <createIndex indexName="FKfwis855lttolrcevqj44esxum" tableName="ticket_purchase">
+            <column name="user_username"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-17">
+        <createIndex indexName="FKigd40x6iqofymbydpq49fpdda" tableName="ticket">
+            <column name="showingid_showing_date"/>
+            <column name="showingid_showing_eventid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-18">
+        <createIndex indexName="FKkxgkf4egwvlnil5kcis77q992" tableName="event">
+            <column name="seller_events"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-19">
+        <addForeignKeyConstraint baseColumnNames="ticketid_ticket_name,ticketid_showingid_showing_date,ticketid_showingid_showing_evenid" baseTableName="ticket_purchase" constraintName="FKe4xuaxurcs1kvs9xebtnhimnl" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ticket_name,showingid_showing_date,showingid_showing_eventid" referencedTableName="ticket"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-20">
+        <addForeignKeyConstraint baseColumnNames="event_showings" baseTableName="showing" constraintName="FKeolq1kf2tttcxm7sfqejbnc46" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="eventid" referencedTableName="event"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-21">
+        <addForeignKeyConstraint baseColumnNames="user_username" baseTableName="ticket_purchase" constraintName="FKfwis855lttolrcevqj44esxum" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="user_username" referencedTableName="user"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-22">
+        <addForeignKeyConstraint baseColumnNames="showingid_showing_date,showingid_showing_eventid" baseTableName="ticket" constraintName="FKigd40x6iqofymbydpq49fpdda" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="showing_date,showing_event" referencedTableName="showing"/>
+    </changeSet>
+    <changeSet author="Huros (generated)" id="1581975372045-23">
+        <addForeignKeyConstraint baseColumnNames="seller_events" baseTableName="event" constraintName="FKkxgkf4egwvlnil5kcis77q992" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="user_username" referencedTableName="user"/>
+    </changeSet>
+</databaseChangeLog>
