@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
 public class User {
+
+	public static final String DEFAULT_USER_ROLE = "User";
+	public static final String SELLER_ROLE = "Seller";
 
 	@Id
 	protected String userUsername;
@@ -24,10 +28,13 @@ public class User {
 	protected String userSurname;
 
 	@Column(nullable = false)
-	protected String userPassword;
+	protected String userPasswordHash;
 
 	@OneToMany(mappedBy = "ticketPurchaseUniqueID.user")
 	protected List<TicketPurchase> userTickets = new ArrayList<>();
+
+	@ElementCollection
+	protected List<String> roles = new ArrayList<>();
 
 	public User() {
 
@@ -38,7 +45,8 @@ public class User {
 		this.userEmail = userEmail;
 		this.userName = userName;
 		this.userSurname = userSurname;
-		this.userPassword = userPassword;
+		this.userPasswordHash = userPassword;
+		this.roles.add(DEFAULT_USER_ROLE);
 	}
 
 	/*
@@ -77,12 +85,12 @@ public class User {
 		this.userSurname = userSurname;
 	}
 
-	public String getUserPassword() {
-		return userPassword;
+	public String getUserPasswordHash() {
+		return userPasswordHash;
 	}
 
-	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
+	public void setUserPasswordHash(String userPassword) {
+		this.userPasswordHash = userPassword;
 	}
 
 	public List<TicketPurchase> getUserTickets() {
@@ -91,6 +99,14 @@ public class User {
 
 	public void setUserTickets(List<TicketPurchase> userTickets) {
 		this.userTickets = userTickets;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 
 }

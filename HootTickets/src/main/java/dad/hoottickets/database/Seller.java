@@ -19,6 +19,7 @@ public class Seller extends User {
 	public Seller(String sellerUsername, String sellerEmail, String sellerName, String sellerSurname,
 			String sellerPassword) {
 		super(sellerUsername, sellerEmail, sellerName, sellerSurname, sellerPassword);
+		roles.add(SELLER_ROLE);
 	}
 
 	/*

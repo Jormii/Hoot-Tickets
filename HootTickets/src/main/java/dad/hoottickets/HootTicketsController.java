@@ -223,7 +223,7 @@ public class HootTicketsController {
 			System.out.println(seat);
 		}
 		List<Ticket> showingTickets = showing.getShowingTickets();
-		User user = userRepository.findAll().get(0);
+		User user = userRepository.findAll().iterator().next();
 		for (Ticket ticket : showingTickets) {
 			if (to.get(i) != 0) {
 				TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(user, ticket);
