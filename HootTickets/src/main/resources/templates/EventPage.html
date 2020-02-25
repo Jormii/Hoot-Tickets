@@ -19,7 +19,7 @@
 		<tr>
 			<td>Time: {{showingID.showingDate}}</td>
 			<td>/ Place: {{showingPlace}}</td>
-			<td><form method="POST" action="/testTicketSelectionPage">
+			<td><form method="POST" action="/event/tickets">
     <input type="hidden" name="showingDate" value="{{showingID.showingDate}}"/> 
     <input type="hidden" name="showingEvent" value="{{showingID.showingEvent}}"/> 
     <input type="submit" value="Submit" />
