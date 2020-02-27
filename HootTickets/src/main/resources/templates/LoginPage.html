@@ -1,0 +1,27 @@
+<meta charset="UTF-8">
+<title>Hoot Tickets - Login</title>
+</head>
+	{{#errorMessage}}
+	<h5>{{errorMessage}}</h5>
+	{{/errorMessage}}
+	
+	<form action="/LoginUser/sendData" method="post">
+		<label>Enter your username: *</label>
+		<input type="text" name="username" required="required">
+		<br>
+		<label>Enter your email: *</label>
+		<input type="text" name="email" required="required">
+		<br>
+		<label>Enter your password: *</label>
+		<input type="password" name="password" required="required">
+		<br>
+		<label>Are you a seller?</label>
+		<input type="checkbox" name="isSeller">
+		<br><br>
+		<button type="submit">Login sesion</button>
+	</form>
+<body>
+
+</body>
+
+</html>
