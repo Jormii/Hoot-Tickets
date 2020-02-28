@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -146,6 +147,9 @@ public class HootTicketsController {
 		if (session.hasLoggedIn()) {
 			model.addAttribute(HomePage.USERNAME_ATTR, session.getUser().getUserName());
 		}
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
+
 		model.addAttribute(HomePage.LOGGED_IN_ATTR, session.hasLoggedIn());
 		model.addAttribute(HomePage.EVENTS_LIST_ATTR, eventsList);
 
@@ -153,13 +157,14 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("/event")
-	private String eventPageTest(Model model, @RequestParam int eventID) {
+	private String eventPageTest(Model model, @RequestParam int eventID, HttpServletRequest request) {
 		Event event = eventRepository.findById(eventID).get();
 		String eventName = event.getEventName();
 		String eventSummary = event.getEventSummary();
 		String eventDescription = event.getEventDescription();
 		List<Showing> eventShowings = event.getEventShowings();
-
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken());
 		model.addAttribute(TemplatesAttributes.EventPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.EventPage.EVENT_SUMMARY_ATTR, eventSummary);
 		model.addAttribute(TemplatesAttributes.EventPage.EVENT_DESCRIPTION_ATTR, eventDescription);
@@ -169,7 +174,7 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("/event/tickets")
-	private String ticketSelectionPage(Model model, @RequestParam String showingDate, @RequestParam String showingEvent)
+	private String ticketSelectionPage(Model model, @RequestParam String showingDate, @RequestParam String showingEvent, HttpServletRequest request)
 			throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
@@ -178,7 +183,8 @@ public class HootTicketsController {
 		String eventSummary = showing.getShowingEvent().getEventSummary();
 		String showingPlace = showing.getShowingPlace();
 		List<Ticket> showingTickets = showing.getShowingTickets();
-
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken());
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.EVENT_SUMMARY_ATTR, eventSummary);
 		model.addAttribute(TemplatesAttributes.TicketSelectionPage.SHOWING_TIME_ATTR, showingDate);
@@ -190,7 +196,7 @@ public class HootTicketsController {
 
 	@PostMapping("/checkout")
 	private String checkoutPage(Model model, @RequestParam("seat[]") List<Integer> to, @RequestParam String showingDate,
-			@RequestParam String showingEvent) throws ParseException {
+			@RequestParam String showingEvent, HttpServletRequest request) throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
@@ -206,6 +212,8 @@ public class HootTicketsController {
 
 		String eventName = showing.getShowingEvent().getEventName();
 		String showingPlace = showing.getShowingPlace();
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
 		model.addAttribute(TemplatesAttributes.CheckoutPage.EVENT_NAME_ATTR, eventName);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingDate);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
@@ -236,7 +244,9 @@ public class HootTicketsController {
 	}
 
 	@RequestMapping("/eventCreation")
-	private String eventCreation(Model model) {
+	private String eventCreation(Model model,HttpServletRequest request) {
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
 		return EventCreationPage.TEMPLATE_NAME;
 	}
 
@@ -246,14 +256,15 @@ public class HootTicketsController {
 		EventCreation eventCreation = session.getEventCreation();
 		ProvisionalEvent provisionalEvent = new ProvisionalEvent(eventName, eventSummary, eventDescription);
 		eventCreation.startEventCreation(provisionalEvent);
-
+		
 		return new RedirectView("/eventCreation/showings");
 	}
 
 	@RequestMapping("eventCreation/showings")
-	private String eventCreationShowings(Model model) {
+	private String eventCreationShowings(Model model, HttpServletRequest request) {
 		EventCreation eventCreation = session.getEventCreation();
-
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
 		ProvisionalEvent provisionalEvent = eventCreation.getProvisionalEvent();
 		model.addAttribute(EventCreationShowingsPage.EVENT_NAME_ATTR, provisionalEvent.getEventName());
 		model.addAttribute(EventCreationShowingsPage.EVENT_SUMMARY_ATTR, provisionalEvent.getEventSummary());
@@ -264,7 +275,9 @@ public class HootTicketsController {
 	}
 
 	@RequestMapping("eventCreation/createShowing")
-	private String showingCreation(Model model) {
+	private String showingCreation(Model model,HttpServletRequest request) {
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
 		return ShowingCreationPage.TEMPLATE_NAME;
 	}
 
@@ -280,11 +293,12 @@ public class HootTicketsController {
 	}
 
 	@PostMapping("eventCreation/createTicket")
-	private String ticketCreation(Model model, @RequestParam int showingIndex) {
+	private String ticketCreation(Model model, @RequestParam int showingIndex, HttpServletRequest request) {
 		int realIndex = showingIndex - 1;
 		EventCreation eventCreation = session.getEventCreation();
 		ProvisionalShowing provisionalShowing = eventCreation.getProvisionalShowings().get(realIndex);
-
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
 		model.addAttribute(TicketCreationPage.SHOWING_DATE_ATTR, provisionalShowing.getShowingDate());
 		model.addAttribute(TicketCreationPage.SHOWING_PLACE_ATTR, provisionalShowing.getShowingPlace());
 		model.addAttribute(TicketCreationPage.SHOWING_INDEX_ATTR, realIndex);
@@ -390,8 +404,10 @@ public class HootTicketsController {
 	private String registrationErrorMessage = null; // TODO: Hacerlo bien
 
 	@RequestMapping("/registerUser")
-	private String userRegistration(Model model) {
+	private String userRegistration(Model model, HttpServletRequest request) {
 		model.addAttribute(RegistrationPage.ERROR_MESSAGE_ATTR, registrationErrorMessage);
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		 model.addAttribute("token", token.getToken()); 
 
 		return RegistrationPage.TEMPLATE_NAME;
 	}

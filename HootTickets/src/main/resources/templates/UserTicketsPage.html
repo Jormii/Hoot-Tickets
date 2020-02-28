@@ -18,6 +18,7 @@
 	<form action="/user/refundTicket" method="post">
 		<input type="hidden" name="ticketPurchaseID" value="{{purchaseID}}">
 		<button type="submit">Refund this ticket</button>
+		<input type="hidden" name="_csrf" value="{{token}}"/>	
 	</form>
 	{{/ticketsBought}}
 	{{^ticketsBought}}

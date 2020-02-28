@@ -32,6 +32,7 @@
 		<form action="/event" method="post">
 			<input type="hidden" name="eventID" value="{{eventID}}" /> <input
 				type="submit" value="Check showings" />
+		<input type="hidden" name="_csrf" value="{{token}}"/>
 		</form>
 		<p>-------</p>
 		{{/eventsList}}

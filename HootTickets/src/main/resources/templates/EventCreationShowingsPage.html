@@ -25,6 +25,7 @@
 		<form action="/eventCreation/createTicket" method="post">
 			<input type="hidden" name="showingIndex" value="{{-index}}">
 			<button type="submit">Create ticket for this showing</button>
+			<input type="hidden" name="_csrf" value="{{token}}"/>	
 		</form>
 		<p>----------</p>
 	{{/provisionalShowings}}
@@ -34,10 +35,12 @@
 	
 	<form action="/eventCreation/createShowing">
 		<button type="submit">Create showing</button>
+		<input type="hidden" name="_csrf" value="{{token}}"/>	
 	</form>
 	<p>----------</p>
 	<form action="/eventCreation/checkIfValid" method="post">
 		<button type="submit">Create event</button>
+		<input type="hidden" name="_csrf" value="{{token}}"/>	
 	</form>
 </body>
 
