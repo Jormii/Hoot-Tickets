@@ -455,5 +455,18 @@ public class HootTicketsController {
 
 		return new RedirectView("/user/myTickets");
 	}
+	/*
+	 * Login User
+	 */
+	private String LoginErrorMessage= null;
+	
+	@RequestMapping("/LoginUser")
+	private String userLogin(Model model) {
+		model.addAttribute(LoginPage.ERROR_MESSAGE_ATTR, LoginErrorMessage);
+
+		return LoginPage.TEMPLATE_NAME;
+	}
+	
+
 
 }
