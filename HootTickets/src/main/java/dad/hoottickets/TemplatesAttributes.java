@@ -98,4 +98,10 @@ public class TemplatesAttributes {
 		public static final String TICKETS_BOUGHT_ATTR = "ticketsBought";
 	}
 
+	public static class LoginPage{
+		
+		public static final String TEMPLATE_NAME =  "LoginPage";
+		public static final String TEMPLATE_BOUGHT_ATTR =  "ErrorMessage";
+		
+	}
 }
