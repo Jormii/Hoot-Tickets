@@ -101,7 +101,8 @@ public class TemplatesAttributes {
 	public static class LoginPage{
 		
 		public static final String TEMPLATE_NAME =  "LoginPage";
-		public static final String TEMPLATE_MESSAGE_ATTR =  "errorMessage";
+		
+		public static final String ERROR_MESSAGE_ATTR =  "errorMessage";
 		
 	}
 }
