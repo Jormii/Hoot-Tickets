@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -123,11 +124,11 @@ public class HootTicketsController {
 
 		TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(madeUpSeller, ticket);
 		int quantity = 1;
-		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity);
+		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity, "XXXXX");
 
 		TicketPurchaseUniqueID ticketPurchaseID_2 = new TicketPurchaseUniqueID(madeUpSeller, ticket_2);
 		int quantity_2 = 2;
-		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2);
+		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2, "XXXXX");
 
 		ticketPurchaseRepository.save(ticketPurchase);
 		ticketPurchaseRepository.save(ticketPurchase_2);
@@ -215,7 +216,10 @@ public class HootTicketsController {
 
 	@PostMapping("/checkout/success")
 	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
-			@RequestParam String showingDate, @RequestParam String showingEvent) throws ParseException {
+			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String creditCard)
+			throws ParseException {
+		creditCard = new BCryptPasswordEncoder().encode(creditCard);
+		
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
@@ -225,7 +229,7 @@ public class HootTicketsController {
 		for (Ticket ticket : showingTickets) {
 			if (to.get(i) != 0) {
 				TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(user, ticket);
-				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i));
+				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i), creditCard);
 				ticketPurchaseRepository.save(ticketPurchase);
 				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats() - to.get(i));
 				ticketRepository.save(ticket);
@@ -413,6 +417,7 @@ public class HootTicketsController {
 			return new RedirectView("/registerUser");
 		}
 
+		password = new BCryptPasswordEncoder().encode(password);
 		User newUser = (isSeller) ? new Seller(username, email, name, surname, password)
 				: new User(username, email, username, surname, password);
 
