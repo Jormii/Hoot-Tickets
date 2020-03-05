@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
+import dad.hoottickets.TemplatesAttributes.EventPage;
 import dad.hoottickets.TemplatesAttributes.HomePage;
 import dad.hoottickets.TemplatesAttributes.RegistrationPage;
 import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
@@ -146,6 +147,7 @@ public class HootTicketsController {
 
 		if (session.hasLoggedIn()) {
 			model.addAttribute(HomePage.USERNAME_ATTR, session.getUser().getUserName());
+			model.addAttribute(HomePage.IS_SELLER_ATTR, session.isSeller());
 		}
 		model.addAttribute(HomePage.LOGGED_IN_ATTR, session.hasLoggedIn());
 		model.addAttribute(HomePage.EVENTS_LIST_ATTR, eventsList);
@@ -161,12 +163,12 @@ public class HootTicketsController {
 		String eventDescription = event.getEventDescription();
 		List<Showing> eventShowings = event.getEventShowings();
 
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_NAME_ATTR, eventName);
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_SUMMARY_ATTR, eventSummary);
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_DESCRIPTION_ATTR, eventDescription);
-		model.addAttribute(TemplatesAttributes.EventPage.EVENT_SHOWINGS_LIST_ATTR, eventShowings);
+		model.addAttribute(EventPage.EVENT_NAME_ATTR, eventName);
+		model.addAttribute(EventPage.EVENT_SUMMARY_ATTR, eventSummary);
+		model.addAttribute(EventPage.EVENT_DESCRIPTION_ATTR, eventDescription);
+		model.addAttribute(EventPage.EVENT_SHOWINGS_LIST_ATTR, eventShowings);
 
-		return TemplatesAttributes.EventPage.TEMPLATE_NAME;
+		return EventPage.TEMPLATE_NAME;
 	}
 
 	@PostMapping("/event/tickets")
@@ -219,7 +221,7 @@ public class HootTicketsController {
 			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String creditCard)
 			throws ParseException {
 		creditCard = new BCryptPasswordEncoder().encode(creditCard);
-		
+
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();

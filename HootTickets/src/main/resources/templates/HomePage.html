@@ -12,17 +12,20 @@
 <body>
 	{{#loggedIn}}
 	<p>Welcome, {{username}}</p>
-	{{/loggedIn}} {{^loggedIn}}
+	{{#isSeller}}
+	<p>
+		<a href="/eventCreation">Create a new event</a>
+	<p>
+	{{/isSeller}}
+	<p>
+		<a href="/user/myTickets">My tickets bought</a>
+	<p>
+	{{/loggedIn}}
+	{{^loggedIn}}
 	<p>
 		<a href="/registerUser">Sign up</a>
 	</p>
 	{{/loggedIn}}
-	<p>
-		<a href="/eventCreation">Create a new event</a>
-	<p>
-	<p>
-		<a href="/user/myTickets">My tickets bought</a>
-	<p>
 	<div class="container text-center">
 		<h1>Next events</h1>
 		<p>-------</p>
