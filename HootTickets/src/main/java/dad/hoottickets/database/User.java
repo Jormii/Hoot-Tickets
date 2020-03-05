@@ -28,7 +28,7 @@ public class User {
 	protected String userSurname;
 
 	@Column(nullable = false)
-	protected String userPasswordHash;
+	protected String userPassword;
 
 	@OneToMany(mappedBy = "ticketPurchaseUniqueID.user")
 	protected List<TicketPurchase> userTickets = new ArrayList<>();
@@ -45,7 +45,7 @@ public class User {
 		this.userEmail = userEmail;
 		this.userName = userName;
 		this.userSurname = userSurname;
-		this.userPasswordHash = userPassword;
+		this.userPassword = userPassword;
 		this.roles.add(DEFAULT_USER_ROLE);
 	}
 
@@ -85,12 +85,12 @@ public class User {
 		this.userSurname = userSurname;
 	}
 
-	public String getUserPasswordHash() {
-		return userPasswordHash;
+	public String getUserPassword() {
+		return userPassword;
 	}
 
-	public void setUserPasswordHash(String userPassword) {
-		this.userPasswordHash = userPassword;
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
 	public List<TicketPurchase> getUserTickets() {
