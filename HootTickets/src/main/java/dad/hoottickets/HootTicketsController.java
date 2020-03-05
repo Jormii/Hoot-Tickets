@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -138,8 +140,8 @@ public class HootTicketsController {
 		}
 	}
 
-	@RequestMapping("/testHomePage")
-	private String home(Model model) {
+	@RequestMapping("/")
+	private String home(Model model, HttpServletRequest request) {
 		List<Event> eventsList = eventRepository.findAll();
 
 		if (session.hasLoggedIn()) {
@@ -151,7 +153,7 @@ public class HootTicketsController {
 		return TemplatesAttributes.HomePage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/testEventPage")
+	@PostMapping("/event")
 	private String eventPageTest(Model model, @RequestParam int eventID) {
 		Event event = eventRepository.findById(eventID).get();
 		String eventName = event.getEventName();
@@ -167,7 +169,7 @@ public class HootTicketsController {
 		return TemplatesAttributes.EventPage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/testTicketSelectionPage")
+	@PostMapping("/event/tickets")
 	private String ticketSelectionPage(Model model, @RequestParam String showingDate, @RequestParam String showingEvent)
 			throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -187,7 +189,7 @@ public class HootTicketsController {
 		return TemplatesAttributes.TicketSelectionPage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/testCheckoutPage")
+	@PostMapping("/checkout")
 	private String checkoutPage(Model model, @RequestParam("seat[]") List<Integer> to, @RequestParam String showingDate,
 			@RequestParam String showingEvent) throws ParseException {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -212,7 +214,7 @@ public class HootTicketsController {
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/testFinishedCheckoutPage")
+	@PostMapping("/checkout/success")
 	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
 			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String creditCard)
 			throws ParseException {
@@ -220,11 +222,8 @@ public class HootTicketsController {
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
 		int i = 0;
-		for (int seat : to) {
-			System.out.println(seat);
-		}
 		List<Ticket> showingTickets = showing.getShowingTickets();
-		User user = userRepository.findAll().get(0);
+		User user = userRepository.findAll().iterator().next();
 		for (Ticket ticket : showingTickets) {
 			if (to.get(i) != 0) {
 				TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(user, ticket);
@@ -236,12 +235,6 @@ public class HootTicketsController {
 			i++;
 		}
 		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
-	}
-
-	// TODO: BORRAR
-	@RequestMapping("/")
-	private String accesoRapido(Model model) {
-		return home(model);
 	}
 
 	@RequestMapping("/eventCreation")
@@ -422,6 +415,7 @@ public class HootTicketsController {
 			return new RedirectView("/registerUser");
 		}
 
+		password = new BCryptPasswordEncoder().encode(password);
 		User newUser = (isSeller) ? new Seller(username, email, name, surname, password)
 				: new User(username, email, username, surname, password);
 
@@ -432,7 +426,7 @@ public class HootTicketsController {
 			e.printStackTrace();
 		}
 
-		return new RedirectView("/testHomePage");
+		return new RedirectView("/");
 	}
 
 	/*
