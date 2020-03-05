@@ -218,6 +218,8 @@ public class HootTicketsController {
 	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
 			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String creditCard)
 			throws ParseException {
+		creditCard = new BCryptPasswordEncoder().encode(creditCard);
+		
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
