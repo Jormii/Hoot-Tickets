@@ -11,14 +11,21 @@ import dad.hoottickets.database.User;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+	// TODO: Borrar
+	private static final boolean PERMIT_ALL = true;
+	
 	@Autowired
 	private UserRepositoryAuthenticationProvider authenticationProvider;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		setUpPublicURLs(http);
-		setUpRegisteredUsersURLs(http);
-		setUpSellersURLs(http);
+		if (PERMIT_ALL) {
+			http.authorizeRequests().anyRequest().permitAll();
+		} else {
+			setUpPublicURLs(http);
+			setUpRegisteredUsersURLs(http);
+			setUpSellersURLs(http);
+		}
 		
 		// TODO: Login y logout
 		/*
