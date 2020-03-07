@@ -10,16 +10,23 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
@@ -31,6 +38,7 @@ import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
 import dad.hoottickets.TemplatesAttributes.UserTicketsPage;
 import dad.hoottickets.database.Event;
 import dad.hoottickets.database.EventRepository;
+import dad.hoottickets.database.Message_Service;
 import dad.hoottickets.database.Seller;
 import dad.hoottickets.database.Showing;
 import dad.hoottickets.database.ShowingID;
@@ -218,10 +226,9 @@ public class HootTicketsController {
 
 	@PostMapping("/checkout/success")
 	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
-			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String creditCard)
-			throws ParseException {
+			
+			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String email, @RequestParam String creditCard) throws ParseException, IOException, TimeoutException {
 		creditCard = new BCryptPasswordEncoder().encode(creditCard);
-
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
@@ -235,9 +242,22 @@ public class HootTicketsController {
 				ticketPurchaseRepository.save(ticketPurchase);
 				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats() - to.get(i));
 				ticketRepository.save(ticket);
+				ConnectionFactory factory = new ConnectionFactory();
+			    factory.setHost("localhost");
+			    Connection connection = factory.newConnection();
+			    Channel channel = connection.createChannel();
+			   Message_Service message=new Message_Service(email,ticketPurchaseID.toString(), to.get(i),showing.getShowingPlace(),showing.getShowingID().getShowingEvent());
+				byte[] data = SerializationUtils.serialize(message); 
+			   channel.queueDeclare("cola", false, false, false, null);
+			    channel.basicPublish("", "cola", null, data);
+			    //System.out.println(" [x] Sent '" + data + "'");    
+			
+				channel.close();
+				connection.close();
 			}
 			i++;
 		}
+		 
 		return TemplatesAttributes.FinishedCheckoutPage.TEMPLATE_NAME;
 	}
 
