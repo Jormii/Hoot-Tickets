@@ -23,6 +23,7 @@ import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
 import dad.hoottickets.TemplatesAttributes.HomePage;
+import dad.hoottickets.TemplatesAttributes.LoginPage;
 import dad.hoottickets.TemplatesAttributes.RegistrationPage;
 import dad.hoottickets.TemplatesAttributes.ShowingCreationPage;
 import dad.hoottickets.TemplatesAttributes.TicketCreationPage;
@@ -467,6 +468,25 @@ public class HootTicketsController {
 		return LoginPage.TEMPLATE_NAME;
 	}
 	
+
+	@PostMapping("/loginUser/sendData")
+	private RedirectView receiveUserData(@RequestParam String username, @RequestParam String email,
+			@RequestParam String password,@RequestParam(required = false) boolean isSeller) {
+		LoginErrorMessage = null;
+
+		if (userRepository.findById(username).isPresent()) {
+	
+			return new RedirectView("/");
+		}
+		
+		/*si no encuentra el usuario*/
+
+		else {
+	
+			LoginErrorMessage = "Error: An user not exists";
+			return new RedirectView("/loginUser");
+		}
+	}
 
 
 }
