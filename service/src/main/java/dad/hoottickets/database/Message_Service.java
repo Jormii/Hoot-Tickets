@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class Message_Service implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2926475728875258030L;
+
 	String email;
 	String ticket_id;
 	int quantity;
@@ -11,7 +16,6 @@ public class Message_Service implements Serializable {
 	String event;
 
 	public Message_Service(String email, String ticket_id, int quantity, String showing, String event) {
-
 		this.email = email;
 		this.ticket_id = ticket_id;
 		this.quantity = quantity;
