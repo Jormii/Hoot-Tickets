@@ -23,6 +23,7 @@
 			<p>This session has no tickets yet</p>
 		{{/provisionalTickets}}
 		<form action="/eventCreation/createTicket" method="post">
+		<input type="hidden" name="_csrf" value="{{token}}"/>
 			<input type="hidden" name="showingIndex" value="{{-index}}">
 			<button type="submit">Create ticket for this showing</button>
 		</form>
@@ -37,6 +38,7 @@
 	</form>
 	<p>----------</p>
 	<form action="/eventCreation/checkIfValid" method="post">
+	<input type="hidden" name="_csrf" value="{{token}}"/>
 		<button type="submit">Create event</button>
 	</form>
 </body>

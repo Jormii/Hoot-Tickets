@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.logout().logoutSuccessUrl("/");
 		*/
 		
-		http.csrf().disable();
+		//http.csrf().disable();
 	}
 	
 	private void setUpPublicURLs(HttpSecurity http) throws Exception {

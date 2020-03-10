@@ -10,6 +10,7 @@
 	<p>Creating ticket for showing taking place {{showingDate}}, in {{showingPlace}}</p>
 	<p></p>
 	<form action="/eventCreation/sendTicketData" method="post">
+	<input type="hidden" name="_csrf" value="{{token}}"/>
 		<input type="hidden" name="showingIndex" value="{{showingIndex}}">
 		<label>What's the name of this ticket?*</label>
 		<input type="text" name="ticketName" required="required">
