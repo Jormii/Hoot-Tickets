@@ -17,6 +17,7 @@
 	<p>Price of this ticket: {{ticketPurchaseUniqueID.ticket.ticketPrice}} $</p>
 	<form action="/user/refundTicket" method="post">
 		<input type="hidden" name="ticketPurchaseID" value="{{purchaseID}}">
+		<input type="hidden" name="_csrf" value="{{token}}"/>
 		<button type="submit">Refund this ticket</button>
 	</form>
 	{{/ticketsBought}}

@@ -10,6 +10,7 @@
 	{{/errorMessage}}
 	
 	<form action="/registerUser/sendData" method="post">
+	<input type="hidden" name="_csrf" value="{{token}}"/>
 		<label>Enter your username: *</label>
 		<input type="text" name="username" required="required">
 		<br>

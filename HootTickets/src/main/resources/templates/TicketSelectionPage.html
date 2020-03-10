@@ -17,6 +17,7 @@
 	<form method="POST" action="/checkout">
 		<input type="hidden" name="showingDate" value="{{showingTime}}" /> <input
 			type="hidden" name="showingEvent" value="{{eventName}}" />
+			<input type="hidden" name="_csrf" value="{{token}}"/>
 		{{#showingTicketsList}}
 		<table>
 			<tr>
