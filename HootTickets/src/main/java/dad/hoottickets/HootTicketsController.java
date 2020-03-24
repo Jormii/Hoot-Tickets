@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
@@ -515,7 +514,6 @@ public class HootTicketsController {
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 		
 		model.addAttribute("token", token.getToken());
-		model.addAttribute("token", token.getToken());
 		model.addAttribute(LoginPage.ERROR_MESSAGE_ATTR, loginErrorMessage);
 
 		return LoginPage.TEMPLATE_NAME;
@@ -549,6 +547,7 @@ public class HootTicketsController {
 	/*
 	 * Logout
 	 */
+
 	@RequestMapping("/logoutUser")
 	private RedirectView userLogout() {
 		try {

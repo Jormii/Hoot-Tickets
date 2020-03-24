@@ -10,13 +10,18 @@ import dad.hoottickets.database.User;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-	// TODO: Borrar
-	private static final boolean PERMIT_ALL = false;
 	
 	@Autowired
 	private UserRepositoryAuthenticationProvider authenticationProvider;
 
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authenticationProvider);
+		
+		//auth.inMemoryAuthentication().withUser("user").password("password").roles(User.DEFAULT_USER_ROLE);
+		//auth.inMemoryAuthentication().withUser("user").password("password").roles(User.DEFAULT_USER_ROLE, User.SELLER_ROLE);
+	}
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		setUpPublicURLs(http);
@@ -24,7 +29,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		setUpSellersURLs(http);
 		
 		// Login y logout
-		/*
 		http.formLogin().loginPage("/loginUser");
 		http.formLogin().usernameParameter("username");
 		http.formLogin().passwordParameter("password");
@@ -33,9 +37,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		http.logout().logoutUrl("/logoutUser");
 		http.logout().logoutSuccessUrl("/");
-		*/
-		
-		// http.csrf().disable();
 	}
 	
 	private void setUpPublicURLs(HttpSecurity http) throws Exception {
@@ -67,14 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/eventCreation/checkIfValid").hasAnyRole(User.SELLER_ROLE);
 		http.authorizeRequests().antMatchers("/eventCreation/completed").hasAnyRole(User.SELLER_ROLE);
 		http.authorizeRequests().antMatchers("/eventCreation/failed").hasAnyRole(User.SELLER_ROLE);
-	}
-
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider);
-		
-		auth.inMemoryAuthentication().withUser("user").password("password").roles(User.DEFAULT_USER_ROLE);
-		auth.inMemoryAuthentication().withUser("user").password("password").roles(User.DEFAULT_USER_ROLE, User.SELLER_ROLE);
 	}
 
 }
