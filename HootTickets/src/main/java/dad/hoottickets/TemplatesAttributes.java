@@ -8,6 +8,7 @@ public class TemplatesAttributes {
 
 		public static final String USERNAME_ATTR = "username";
 		public static final String LOGGED_IN_ATTR = "loggedIn";
+		public static final String IS_SELLER_ATTR = "isSeller";
 		public static final String EVENTS_LIST_ATTR = "eventsList";
 	}
 

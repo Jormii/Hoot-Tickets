@@ -20,15 +20,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		setUpRegisteredUsersURLs(http);
 		setUpSellersURLs(http);
 		
-		// TODO: Login y logout
+		// Login y logout
 		/*
-		http.formLogin().loginPage("/login");
+		http.formLogin().loginPage("/loginUser");
 		http.formLogin().usernameParameter("username");
 		http.formLogin().passwordParameter("password");
 		http.formLogin().defaultSuccessUrl("/");
-		http.formLogin().failureUrl("/loginerror");
+		http.formLogin().failureUrl("/loginUser");
 		
-		http.logout().logoutUrl("/logout/");
+		http.logout().logoutUrl("/logoutUser");
 		http.logout().logoutSuccessUrl("/");
 		*/
 		

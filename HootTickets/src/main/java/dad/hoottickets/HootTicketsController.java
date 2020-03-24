@@ -77,7 +77,7 @@ public class HootTicketsController {
 		String userEmail = "Correo del usuario";
 		String userName = "Nombre del usuario";
 		String userSurname = "Apellido del usuario";
-		String userPassword = "Contraseña del usuario";
+		String userPassword = "P";
 		User user = new User(userUsername, userEmail, userName, userSurname, userPassword);
 
 		userRepository.save(user);
@@ -148,6 +148,7 @@ public class HootTicketsController {
 			model.addAttribute(HomePage.USERNAME_ATTR, session.getUser().getUserName());
 		}
 		model.addAttribute(HomePage.LOGGED_IN_ATTR, session.hasLoggedIn());
+		model.addAttribute(HomePage.IS_SELLER_ATTR, session.isSeller());
 		model.addAttribute(HomePage.EVENTS_LIST_ATTR, eventsList);
 
 		return TemplatesAttributes.HomePage.TEMPLATE_NAME;
@@ -456,37 +457,55 @@ public class HootTicketsController {
 
 		return new RedirectView("/user/myTickets");
 	}
+
 	/*
 	 * Login User
 	 */
-	private String LoginErrorMessage= null;
-	
-	@RequestMapping("/LoginUser")
+	private String loginErrorMessage = null;
+
+	@RequestMapping("/loginUser")
 	private String userLogin(Model model) {
-		model.addAttribute(LoginPage.ERROR_MESSAGE_ATTR, LoginErrorMessage);
+		model.addAttribute(LoginPage.ERROR_MESSAGE_ATTR, loginErrorMessage);
 
 		return LoginPage.TEMPLATE_NAME;
 	}
-	
 
 	@PostMapping("/loginUser/sendData")
-	private RedirectView receiveUserData(@RequestParam String username, @RequestParam String email,
-			@RequestParam String password,@RequestParam(required = false) boolean isSeller) {
-		LoginErrorMessage = null;
+	private RedirectView receiveUserData(@RequestParam String username, @RequestParam String password) {
+		loginErrorMessage = null;
 
-		if (userRepository.findById(username).isPresent()) {
-	
-			return new RedirectView("/");
-		}
-		
-		/*si no encuentra el usuario*/
-
-		else {
-	
-			LoginErrorMessage = "Error: An user not exists";
+		User user = userRepository.findByUserUsername(username);
+		if (user == null) {
+			loginErrorMessage = "Username provided not found in database";
 			return new RedirectView("/loginUser");
 		}
+
+		String userPassword = user.getUserPasswordHash();
+		if (!userPassword.equals(password)) {
+			loginErrorMessage = "User or password are wrong";
+			return new RedirectView("/loginUser");
+		}
+
+		try {
+			session.logIn(user);
+		} catch (Exception e) {
+			loginErrorMessage = "Unexpected error. You are already logged in";
+			return new RedirectView("/loginUser");
+		}
+		return new RedirectView("/");
 	}
 
+	/*
+	 * Logout
+	 */
+	@RequestMapping("/logoutUser")
+	private RedirectView userLogout() {
+		try {
+			session.logOut();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new RedirectView("/");
+	}
 
 }
