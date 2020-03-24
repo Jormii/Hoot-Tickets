@@ -11,6 +11,9 @@ import dad.hoottickets.database.User;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+	// TODO: Borrar
+	private static final boolean PERMIT_ALL = false;
+	
 	@Autowired
 	private UserRepositoryAuthenticationProvider authenticationProvider;
 
@@ -32,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.logout().logoutSuccessUrl("/");
 		*/
 		
-		http.csrf().disable();
+		// http.csrf().disable();
 	}
 	
 	private void setUpPublicURLs(HttpSecurity http) throws Exception {
@@ -41,6 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/event/tickets").permitAll();
 		http.authorizeRequests().antMatchers("/checkout").permitAll();
 		http.authorizeRequests().antMatchers("/checkout/success").permitAll();
+		http.authorizeRequests().antMatchers("/loginUser").permitAll();
+		http.authorizeRequests().antMatchers("/loginUser/sendData").permitAll();
+		http.authorizeRequests().antMatchers("/logoutUser").permitAll();
 		http.authorizeRequests().antMatchers("/registerUser").permitAll();
 		http.authorizeRequests().antMatchers("/registerUser/sendData").permitAll();
 	}

@@ -8,6 +8,7 @@
 
 <body>
 	<form action="/eventCreation/sendShowingData" method="post">
+	<input type="hidden" name="_csrf" value="{{token}}"/>
 		<label>When is this showing taking place?* </label>
 		<input type="date" name="showingDate" required="required">
 		<input type="time" name="showingTime" required="required">

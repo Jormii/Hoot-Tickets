@@ -12,20 +12,24 @@ public class TicketPurchase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long purchaseID;
-	
+
 	@Column(unique = true)
 	private TicketPurchaseUniqueID ticketPurchaseUniqueID;
 
 	@Column(nullable = false)
 	private int quantity;
 
+	@Column(nullable = false)
+	private String creditCard;
+
 	public TicketPurchase() {
 
 	}
 
-	public TicketPurchase(TicketPurchaseUniqueID ticketPurchaseUniqueID, int quantity) {
+	public TicketPurchase(TicketPurchaseUniqueID ticketPurchaseUniqueID, int quantity, String creditCard) {
 		this.ticketPurchaseUniqueID = ticketPurchaseUniqueID;
 		this.quantity = quantity;
+		this.creditCard = creditCard;
 	}
 
 	/*
@@ -54,6 +58,14 @@ public class TicketPurchase {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public String getCreditCard() {
+		return creditCard;
+	}
+
+	public void setCreditCard(String creditCard) {
+		this.creditCard = creditCard;
 	}
 
 }

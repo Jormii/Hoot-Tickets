@@ -21,7 +21,8 @@
 			<td>/ Place: {{showingPlace}}</td>
 			<td><form method="POST" action="/event/tickets">
     <input type="hidden" name="showingDate" value="{{showingID.showingDate}}"/> 
-    <input type="hidden" name="showingEvent" value="{{showingID.showingEvent}}"/> 
+    <input type="hidden" name="showingEvent" value="{{showingID.showingEvent}}"/>
+    <input type="hidden" name="_csrf" value="{{token}}"/> 
     <input type="submit" value="Submit" />
 </form></td>
 		</tr>

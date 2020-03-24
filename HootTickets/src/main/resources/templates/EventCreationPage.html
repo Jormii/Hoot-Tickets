@@ -8,6 +8,7 @@
 
 <body>
 	<form method="post" action="/eventCreation/sendEventData">
+	<input type="hidden" name="_csrf" value="{{token}}"/>
 		<label>Event name*: </label>
 		<input type="text" name="eventName" required="required"></input>
 		<br><br>

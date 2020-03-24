@@ -32,7 +32,7 @@ public class UserRepositoryAuthenticationProvider implements AuthenticationProvi
 		}
 
 		String password = (String) authentication.getCredentials();
-		if (!new BCryptPasswordEncoder().matches(password, user.getUserPasswordHash())) {
+		if (!new BCryptPasswordEncoder().matches(password, user.getUserPassword())) {
 			throw new BadCredentialsException("Wrong password");
 		}
 

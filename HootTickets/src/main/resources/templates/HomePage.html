@@ -38,7 +38,8 @@
 		<h4>{{eventName}}</h4>
 		<p>{{eventSummary}}</p>
 		<form action="/event" method="post">
-			<input type="hidden" name="eventID" value="{{eventID}}" /> <input
+			<input type="hidden" name="eventID" value="{{eventID}}" /> 
+			<input type="hidden" name="_csrf" value="{{token}}"/> <input
 				type="submit" value="Check showings" />
 		</form>
 		<p>-------</p>
