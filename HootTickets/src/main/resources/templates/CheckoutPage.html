@@ -32,16 +32,18 @@
 		<table>
 			<tr>
 				<td>Número de tarjeta</td>
-				<td><input type="text" name="creditCard"></td>
+				<td><input type="text" name="creditCard" required="required"></td>
 			</tr>
 			<tr>
 				<td>CVV</td>
-				<td><input type="text" name="cvv"></td>
+				<td><input type="text" name="cvv" required="required"></td>
 			</tr>
+			{{^loggedIn}}
 			<tr>
 				<td>E-MAIL</td>
-				<td><input type="text" name="email"></td>
+				<td><input type="text" name="email" required="required"></td>
 			</tr>
+			{{/loggedIn}}
 		</table>
 		
 		<button type="submit">Complete check-out</button>

@@ -28,6 +28,8 @@ import java.util.concurrent.TimeoutException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+
+import dad.hoottickets.TemplatesAttributes.CheckoutPage;
 import dad.hoottickets.TemplatesAttributes.EventCreatedPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationPage;
 import dad.hoottickets.TemplatesAttributes.EventCreationShowingsPage;
@@ -61,9 +63,6 @@ import dad.hoottickets.eventcreation.ProvisionalTicket;
 @Controller
 public class HootTicketsController {
 
-	// TODO: BORRAR
-	Seller madeUpSeller = new Seller("MadeUpSeller", "madeup@seller.com", "MadeUp", "Seller", "MyMadeUpPassword");
-
 	@Autowired
 	private ClientSession session;
 
@@ -84,65 +83,45 @@ public class HootTicketsController {
 
 	@PostConstruct
 	public void init() {
-		String userUsername = "User";
-		String userEmail = "Correo del usuario";
-		String userName = "Nombre del usuario";
-		String userSurname = "Apellido del usuario";
-		String userPassword = "P";
-		User user = new User(userUsername, userEmail, userName, userSurname, userPassword);
-
-		userRepository.save(user);
-
-		String sellerUsername = "Seller";
-		String sellerEmail = "Correo del vendedor";
-		String sellerName = "Nombre del vendedor";
-		String sellerSurname = "Apellido del vendedor";
-		String sellerPassword = "Contraseña del vendedor";
-		Seller seller = new Seller(sellerUsername, sellerEmail, sellerName, sellerSurname, sellerPassword);
-
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		Seller madeUpSeller = new Seller("MadeUpSeller", "madeup@seller.com", "MadeUp", "Seller", "MyMadeUpPassword");
 		userRepository.save(madeUpSeller);
-		userRepository.save(seller);
 
-		String eventName = "Nombre evento";
-		String eventSummary = "Resumen evento";
-		String eventDescription = "Descripción evento";
-		Event event = new Event(eventName, eventSummary, eventDescription, seller);
+		String eventName = "Estopa - GIRA FUEGO";
+		String eventSummary = "Vive la música en directo de Estopa en el WiZink Center de Madrid el próximo viernes 30 de octubre de 2020.";
+		String eventDescription = "Llega GIRA FUEGO la nueva gira de Estopa, donde los hermanos Muñoz celebrarán sus 20 años de carrera musical presentando las canciones de su nuevo disco y recordando sus grande éxitos.";
+		Event event = new Event(eventName, eventSummary, eventDescription, madeUpSeller);
 
 		eventRepository.save(event);
 
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("1998-01-26 10:10"));
+		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("2020-08-30 21:30"));
 		ShowingID showingID = new ShowingID(date, event.getEventName());
-		String showingPlace = "Lugar de la sesion";
+		String showingPlace = "Madrid - Wizing Center";
 		Showing showing = new Showing(showingID, showingPlace, event);
 
 		showingRepository.save(showing);
 
-		String ticketName = "Nombre de la entrada";
+		String ticketName = "Entrada General Zona Inflamable";
 		TicketID ticketID = new TicketID(ticketName, showing);
-		int ticketPrice = 10;
+		int ticketPrice = 75;
 		int ticketTotalSeats = 100;
 		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats);
 
-		String ticketName_2 = "Nombre de otra entrada";
+		String ticketName_2 = "Entrada Grada";
 		TicketID ticketID_2 = new TicketID(ticketName_2, showing);
-		int ticketPrice_2 = 20;
-		int ticketTotalSeats_2 = 50;
+		int ticketPrice_2 = 46;
+		int ticketTotalSeats_2 = 200;
 		Ticket ticket_2 = new Ticket(ticketID_2, ticketPrice_2, ticketTotalSeats_2);
+
+		String ticketName_3 = "Entrada Persona Movilidad Reducida";
+		TicketID ticketID_3 = new TicketID(ticketName_3, showing);
+		int ticketPrice_3 = 36;
+		int ticketTotalSeats_3 = 20;
+		Ticket ticket_3 = new Ticket(ticketID_3, ticketPrice_3, ticketTotalSeats_3);
 
 		ticketRepository.save(ticket);
 		ticketRepository.save(ticket_2);
-
-		TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(madeUpSeller, ticket);
-		int quantity = 1;
-		TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, quantity, "XXXXX");
-
-		TicketPurchaseUniqueID ticketPurchaseID_2 = new TicketPurchaseUniqueID(madeUpSeller, ticket_2);
-		int quantity_2 = 2;
-		TicketPurchase ticketPurchase_2 = new TicketPurchase(ticketPurchaseID_2, quantity_2, "XXXXX");
-
-		ticketPurchaseRepository.save(ticketPurchase);
-		ticketPurchaseRepository.save(ticketPurchase_2);
+		ticketRepository.save(ticket_3);
 	}
 
 	private void updateHTTPSession(HttpSession httpSession) {
@@ -230,28 +209,35 @@ public class HootTicketsController {
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_TIME_ATTR, showingDate);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.SHOWING_PLACE_ATTR, showingPlace);
 		model.addAttribute(TemplatesAttributes.CheckoutPage.TICKETS_SELECTED_ATTR, map);
+		model.addAttribute(TemplatesAttributes.CheckoutPage.LOGGED_IN_ATTR, session.hasLoggedIn());
 		return TemplatesAttributes.CheckoutPage.TEMPLATE_NAME;
 	}
 
 	@PostMapping("/checkout/success")
 	private String finishedCheckoutPage(Model model, @RequestParam("seat[]") List<Integer> to,
+			@RequestParam String showingDate, @RequestParam String showingEvent,
+			@RequestParam(required = false) String email, @RequestParam String creditCard)
+			throws ParseException, IOException, TimeoutException {
+		if (email == null) {
+			email = session.getUser().getUserEmail();
+		}
 
-			@RequestParam String showingDate, @RequestParam String showingEvent, @RequestParam String email,
-			@RequestParam String creditCard) throws ParseException, IOException, TimeoutException {
 		creditCard = new BCryptPasswordEncoder().encode(creditCard);
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		LocalDateTime date = LocalDateTime.from(dateFormatter.parse(showingDate));
 		Showing showing = showingRepository.findById(new ShowingID(date, showingEvent)).get();
 		int i = 0;
 		List<Ticket> showingTickets = showing.getShowingTickets();
-		User user = userRepository.findAll().iterator().next();
+		User user = (session.hasLoggedIn()) ? session.getUser() : null;
 		for (Ticket ticket : showingTickets) {
 			if (to.get(i) != 0) {
 				TicketPurchaseUniqueID ticketPurchaseID = new TicketPurchaseUniqueID(user, ticket);
 				TicketPurchase ticketPurchase = new TicketPurchase(ticketPurchaseID, to.get(i), creditCard);
 				ticketPurchaseRepository.save(ticketPurchase);
+
 				ticket.setTicketAvailableSeats(ticket.getTicketAvailableSeats() - to.get(i));
 				ticketRepository.save(ticket);
+
 				ConnectionFactory factory = new ConnectionFactory();
 				factory.setHost("localhost");
 				Connection connection = factory.newConnection();
@@ -375,7 +361,7 @@ public class HootTicketsController {
 		String eventName = provisionalEvent.getEventName();
 		String eventSummary = provisionalEvent.getEventSummary();
 		String eventDescription = provisionalEvent.getEventDescription();
-		Seller eventSeller = madeUpSeller; // TODO: Sacar el vendedor de la sesion
+		Seller eventSeller = (Seller) session.getUser();
 		return new Event(eventName, eventSummary, eventDescription, eventSeller);
 	}
 
@@ -479,8 +465,7 @@ public class HootTicketsController {
 
 	@RequestMapping("/user/myTickets")
 	private String listUserTickets(Model model, HttpServletRequest request) {
-		// TODO: Sacar el usuario de la sesión
-		User user = madeUpSeller;
+		User user = session.getUser();
 		List<TicketPurchase> purchases = ticketPurchaseRepository.findByTicketPurchaseUniqueID_User(user);
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 		model.addAttribute("token", token.getToken());
@@ -512,7 +497,7 @@ public class HootTicketsController {
 	@RequestMapping("/loginUser")
 	private String userLogin(Model model, HttpServletRequest request) {
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-		
+
 		model.addAttribute("token", token.getToken());
 		model.addAttribute(LoginPage.ERROR_MESSAGE_ATTR, loginErrorMessage);
 
@@ -530,7 +515,7 @@ public class HootTicketsController {
 		}
 
 		String userPassword = user.getUserPassword();
-		if (!userPassword.equals(password)) {
+		if (!new BCryptPasswordEncoder().matches(password, user.getUserPassword())) {
 			loginErrorMessage = "User or password are wrong";
 			return new RedirectView("/loginUser");
 		}
