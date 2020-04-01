@@ -9,6 +9,7 @@
   - [Servicio interno](#servicio)
 - [Equipo](#equipo)
 - [Diagrama de navegación](#navegacion)
+- [Diagrama de clases](#clases)
 - [Diagrama Entidad-Relación](#diagramaER)
 - [Despliegue de la máquina virtual](#despliegueVM)
 - [Capturas de pantalla](#capturas)
@@ -62,6 +63,9 @@ Yolanda Gómez Henche | y.gomezh@alumnos.urjc.es | https://github.com/yolandagom
 
 ## Diagrama de navegación<a name="navegacion"></a>
 ![alt text](https://i.imgur.com/5cC7tfw.png "Diagrama de navegación")
+
+## Diagrama de clases<a name="clases"></a>
+![alt text](https://i.imgur.com/ayNorJh.png "Diagrama de clases")
 
 ## Diagrama Entidad-Relación<a name="diagramaER"></a>
 ![alt text](https://i.imgur.com/BNdHln5.jpg "Diagrama ER")
