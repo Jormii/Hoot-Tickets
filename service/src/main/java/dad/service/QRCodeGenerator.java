@@ -12,6 +12,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -69,15 +70,20 @@ public class QRCodeGenerator {
 					PdfWriter.getInstance(document, new FileOutputStream("entrada.pdf"));
 
 					document.open();
+					Font fontTitle = FontFactory.getFont(FontFactory.COURIER_BOLD, 24, BaseColor.BLACK);
+					Chunk titleChunk = new Chunk("Hoot Tickets", fontTitle);
+					document.add(new Paragraph(titleChunk));
+					document.add(Chunk.NEWLINE);
+					
 					Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-					Chunk chunk = new Chunk("Hoot Tickets ", font);
+					Chunk eventTextChunk = new Chunk("Event: " + object.getEvent(), font);
+					document.add(new Paragraph(eventTextChunk));
+					document.add(Chunk.NEWLINE);
+					
+					Chunk showingTextChunk = new Chunk("Place: " + object.getShowing(), font);
+					document.add(new Paragraph(showingTextChunk));
+					document.add(Chunk.NEWLINE);
 
-					document.add(chunk);
-					chunk = new Chunk(object.getShowing(), font);
-					document.add(chunk);
-					chunk = new Chunk(object.getEvent(), font);
-
-					document.add(chunk);
 					Image img = Image.getInstance("./MyQRCode.png");
 					document.add(img);
 					document.close();
@@ -105,7 +111,7 @@ public class QRCodeGenerator {
 					Message message = new MimeMessage(session);
 					message.setFrom(new InternetAddress("hootTickets"));
 					message.addRecipient(Message.RecipientType.TO, new InternetAddress(object.getEmail()));
-					message.setSubject("Entrada para el evento " + object.getEvent());
+					message.setSubject("Hoot Tickets: Entrada para el evento " + object.getEvent());
 
 					// Se incluye el cuerpo del mensaje
 					message.setText("Este es el mensaje");

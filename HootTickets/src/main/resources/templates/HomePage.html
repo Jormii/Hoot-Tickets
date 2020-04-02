@@ -12,6 +12,9 @@
 <body>
 	{{#loggedIn}}
 	<p>Welcome, {{username}}</p>
+	<p>
+		<a href="/logoutUser">Log out</a>
+	<p>
 	{{#isSeller}}
 	<p>
 		<a href="/eventCreation">Create a new event</a>
@@ -20,11 +23,13 @@
 	<p>
 		<a href="/user/myTickets">My tickets bought</a>
 	<p>
-	{{/loggedIn}}
-	{{^loggedIn}}
+	{{/loggedIn}} {{^loggedIn}}
 	<p>
 		<a href="/registerUser">Sign up</a>
 	</p>
+	<p>
+		<a href="/loginUser">Log in</a>
+	<p>
 	{{/loggedIn}}
 	<div class="container text-center">
 		<h1>Next events</h1>
