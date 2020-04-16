@@ -11,36 +11,25 @@ import dad.hoottickets.database.User;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	// TODO: Deshacerse de esto
-	public static final boolean PERMIT_ALL = true;
-
 	@Autowired
 	private UserRepositoryAuthenticationProvider authenticationProvider;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
-
-		// auth.inMemoryAuthentication().withUser("user").password("password").roles(User.DEFAULT_USER_ROLE);
-		// auth.inMemoryAuthentication().withUser("user").password("password").roles(User.DEFAULT_USER_ROLE,
-		// User.SELLER_ROLE);
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		if (PERMIT_ALL) {
-			http.authorizeRequests().anyRequest().permitAll();
-		} else {
-			setUpPublicURLs(http);
-			setUpRegisteredUsersURLs(http);
-			setUpSellersURLs(http);
-		}
+		setUpPublicURLs(http);
+		setUpRegisteredUsersURLs(http);
+		setUpSellersURLs(http);
 
 		// Login y logout
 		http.formLogin().loginPage("/loginUser");
 		http.formLogin().usernameParameter("username");
 		http.formLogin().passwordParameter("password");
-		http.formLogin().defaultSuccessUrl("/");
+		http.formLogin().defaultSuccessUrl("/loginUser/success");
 		http.formLogin().failureUrl("/loginUser");
 
 		http.logout().logoutUrl("/logoutUser");
@@ -54,8 +43,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/checkout").permitAll();
 		http.authorizeRequests().antMatchers("/checkout/success").permitAll();
 		http.authorizeRequests().antMatchers("/loginUser").permitAll();
-		http.authorizeRequests().antMatchers("/loginUser/sendData").permitAll();
+		http.authorizeRequests().antMatchers("/loginUser/success").permitAll();
 		http.authorizeRequests().antMatchers("/logoutUser").permitAll();
+		http.authorizeRequests().antMatchers("/logoutUser/success").permitAll();
 		http.authorizeRequests().antMatchers("/registerUser").permitAll();
 		http.authorizeRequests().antMatchers("/registerUser/sendData").permitAll();
 	}

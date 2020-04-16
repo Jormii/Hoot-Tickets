@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -33,7 +34,7 @@ public class User {
 	@OneToMany(mappedBy = "ticketPurchaseUniqueID.user")
 	protected List<TicketPurchase> userTickets = new ArrayList<>();
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	protected List<String> roles = new ArrayList<>();
 
 	public User() {
