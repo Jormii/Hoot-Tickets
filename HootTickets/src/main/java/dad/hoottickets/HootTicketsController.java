@@ -470,8 +470,8 @@ public class HootTicketsController {
 	@GetMapping("/loginUser/success")
 	private RedirectView userLoginSuccess(HttpServletRequest request) {
 		String username = request.getUserPrincipal().getName();
-		boolean a = request.isUserInRole(User.DEFAULT_USER_ROLE);
-		boolean b = request.isUserInRole(User.SELLER_ROLE);
+		boolean isUser = request.isUserInRole(User.DEFAULT_USER_ROLE);
+		boolean isSeller = request.isUserInRole(User.SELLER_ROLE);
 		User user = userRepository.findByUserUsername(username);
 
 		try {
