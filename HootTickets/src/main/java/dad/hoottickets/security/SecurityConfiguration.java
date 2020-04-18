@@ -14,17 +14,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserRepositoryAuthenticationProvider authenticationProvider;
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider);
-	}
-
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		setUpPublicURLs(http);
 		setUpRegisteredUsersURLs(http);
 		setUpSellersURLs(http);
-
+		
 		// Login y logout
 		http.formLogin().loginPage("/loginUser");
 		http.formLogin().usernameParameter("username");
@@ -49,23 +45,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/registerUser").permitAll();
 		http.authorizeRequests().antMatchers("/registerUser/sendData").permitAll();
 	}
-
-	private void setUpRegisteredUsersURLs(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/user/myTickets").hasAnyRole(User.DEFAULT_USER_ROLE);
-		http.authorizeRequests().antMatchers("/user/refundTicket").hasAnyRole(User.DEFAULT_USER_ROLE);
-	}
-
 	private void setUpSellersURLs(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/eventCreation").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/sendEventData").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/showings").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/createShowing").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/sendShowingData").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/createTicket").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/sendTicketData").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/checkIfValid").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/completed").hasAnyRole(User.SELLER_ROLE);
-		http.authorizeRequests().antMatchers("/eventCreation/failed").hasAnyRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/sendEventData").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/showings").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/createShowing").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/sendShowingData").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/createTicket").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/sendTicketData").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/checkIfValid").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/completed").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation/failed").access("hasRole('ROLE_SELLER')");
 	}
+	private void setUpRegisteredUsersURLs(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/user/myTickets").access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/user/refundTicket").access("hasRole('ROLE_USER')");
+	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authenticationProvider);
+	}
+
 
 }

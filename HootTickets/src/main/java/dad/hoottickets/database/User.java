@@ -47,7 +47,7 @@ public class User {
 		this.userName = userName;
 		this.userSurname = userSurname;
 		this.userPassword = userPassword;
-		this.roles.add(DEFAULT_USER_ROLE);
+		this.roles.add("ROLE_USER");
 	}
 
 	/*
