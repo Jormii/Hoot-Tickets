@@ -29,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.formLogin().failureUrl("/loginUser");
 
 		http.logout().logoutUrl("/logoutUser");
-		http.logout().logoutSuccessUrl("/");
+		http.logout().logoutSuccessUrl("/logoutUser/success");
 	}
 
 	private void setUpPublicURLs(HttpSecurity http) throws Exception {
@@ -45,21 +45,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/registerUser").permitAll();
 		http.authorizeRequests().antMatchers("/registerUser/sendData").permitAll();
 	}
+	
 	private void setUpSellersURLs(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/eventCreation").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/sendEventData").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/showings").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/createShowing").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/sendShowingData").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/createTicket").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/sendTicketData").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/checkIfValid").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/completed").access("hasRole('ROLE_SELLER')");
-		http.authorizeRequests().antMatchers("/eventCreation/failed").access("hasRole('ROLE_SELLER')");
+		http.authorizeRequests().antMatchers("/eventCreation").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/sendEventData").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/showings").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/createShowing").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/sendShowingData").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/createTicket").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/sendTicketData").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/checkIfValid").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/completed").hasRole(User.SELLER_ROLE);
+		http.authorizeRequests().antMatchers("/eventCreation/failed").hasRole(User.SELLER_ROLE);
 	}
+	
 	private void setUpRegisteredUsersURLs(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/user/myTickets").access("hasRole('ROLE_USER')");
-		http.authorizeRequests().antMatchers("/user/refundTicket").access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/user/myTickets").hasRole(User.DEFAULT_USER_ROLE);
+		http.authorizeRequests().antMatchers("/user/refundTicket").hasRole(User.DEFAULT_USER_ROLE);
 	}
 
 	@Override

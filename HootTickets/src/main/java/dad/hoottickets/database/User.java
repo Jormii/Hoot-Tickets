@@ -13,8 +13,8 @@ import javax.persistence.OneToMany;
 @Entity
 public class User {
 
-	public static final String DEFAULT_USER_ROLE = "User";
-	public static final String SELLER_ROLE = "Seller";
+	public static final String DEFAULT_USER_ROLE = "USER";
+	public static final String SELLER_ROLE = "SELLER";
 
 	@Id
 	protected String userUsername;
@@ -47,7 +47,7 @@ public class User {
 		this.userName = userName;
 		this.userSurname = userSurname;
 		this.userPassword = userPassword;
-		this.roles.add("ROLE_USER");
+		this.roles.add("ROLE_" + DEFAULT_USER_ROLE);
 	}
 
 	/*

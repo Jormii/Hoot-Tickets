@@ -38,7 +38,6 @@ public class UserRepositoryAuthenticationProvider implements AuthenticationProvi
 
 		List<GrantedAuthority> roles = new ArrayList<>();
 		for (String role : user.getRoles()) {
-			System.out.println(role);
 			roles.add(new SimpleGrantedAuthority(role));
 		}
 

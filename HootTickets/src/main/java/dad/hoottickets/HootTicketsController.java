@@ -413,15 +413,14 @@ public class HootTicketsController {
 				: new User(username, email, username, surname, password);
 
 		userRepository.save(newUser);
-		try {
-			session.logIn(newUser);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new RedirectView("/");
+		return new RedirectView("/registerUser/success");
 	}
 
+	@GetMapping("/registerUser/success")
+	private String userRegistration() {
+		return "RegistrationSuccess";
+	}
+	
 	/*
 	 * Ticket refund
 	 */
@@ -470,8 +469,6 @@ public class HootTicketsController {
 	@GetMapping("/loginUser/success")
 	private RedirectView userLoginSuccess(HttpServletRequest request) {
 		String username = request.getUserPrincipal().getName();
-		boolean isUser = request.isUserInRole(User.DEFAULT_USER_ROLE);
-		boolean isSeller = request.isUserInRole(User.SELLER_ROLE);
 		User user = userRepository.findByUserUsername(username);
 
 		try {
@@ -487,8 +484,13 @@ public class HootTicketsController {
 	 * Logout
 	 */
 	
-	@RequestMapping("/logoutUser")
-	private RedirectView userLogout() {
+	@GetMapping("/logoutUser")
+	private String userLogout() {
+		return "LogoutPage";
+	}
+	
+	@RequestMapping("/logoutUser/success")
+	private RedirectView userLogoutSuccess() {
 		try {
 			session.logOut();
 		} catch (Exception e) {
