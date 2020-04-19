@@ -8,18 +8,23 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 import java.io.IOException;
@@ -413,7 +418,7 @@ public class HootTicketsController {
 				: new User(username, email, username, surname, password);
 
 		userRepository.save(newUser);
-		return new RedirectView("/registerUser/success");
+		return new RedirectView("/");
 	}
 
 	@GetMapping("/registerUser/success")
@@ -484,20 +489,18 @@ public class HootTicketsController {
 	 * Logout
 	 */
 	
-	@GetMapping("/logoutUser")
+	/*@GetMapping("/logoutUser")
 	private String userLogout() {
 		return "LogoutPage";
-	}
+	}*/
 	
-	@RequestMapping("/logoutUser/success")
-	private RedirectView userLogoutSuccess() {
-		try {
-			session.logOut();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return new RedirectView("/");
+	@GetMapping("/logoutUser")
+	private RedirectView logoutPage (HttpServletRequest request, HttpServletResponse response) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth != null){    
+	        new SecurityContextLogoutHandler().logout(request, response, auth);
+	    }
+	    return new RedirectView("/");// para redirigir a la pantalla de login
 	}
 
 }

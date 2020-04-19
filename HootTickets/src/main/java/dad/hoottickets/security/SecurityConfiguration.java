@@ -29,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.formLogin().failureUrl("/loginUser");
 
 		http.logout().logoutUrl("/logoutUser");
-		http.logout().logoutSuccessUrl("/logoutUser/success");
+		http.logout().logoutSuccessUrl("/");
 	}
 
 	private void setUpPublicURLs(HttpSecurity http) throws Exception {
