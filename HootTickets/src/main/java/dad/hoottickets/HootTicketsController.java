@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -92,14 +93,30 @@ public class HootTicketsController {
 
 	}
 
-	private void updateHTTPSession(HttpSession httpSession) {
+	private void updateHTTPSession(HttpSession httpSession, HttpServletRequest request, HttpServletResponse response) {
+		httpSession.setMaxInactiveInterval(60);
 		if (httpSession.isNew()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			new SecurityContextLogoutHandler().logout(request, response, auth);
 			session.resetSession();
 		}
 	}
 
 	@RequestMapping("/")
-	private String home(Model model, HttpServletRequest request) {
+	private String home(Model model, HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
+		updateHTTPSession(httpSession, request, response);
+		
+		Principal userLoggedIn = request.getUserPrincipal();
+		if (userLoggedIn != null && !session.hasLoggedIn()) {
+			String username = userLoggedIn.getName();
+			User user = userRepository.findByUserUsername(username);
+			try {
+				session.logIn(user);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		List<Event> eventsList = eventRepository.findAll();
 
 		if (session.hasLoggedIn()) {
@@ -418,14 +435,14 @@ public class HootTicketsController {
 				: new User(username, email, username, surname, password);
 
 		userRepository.save(newUser);
-		return new RedirectView("/");
+		return new RedirectView("/registerUser/success");
 	}
 
 	@GetMapping("/registerUser/success")
 	private String userRegistration() {
 		return "RegistrationSuccess";
 	}
-	
+
 	/*
 	 * Ticket refund
 	 */
@@ -488,19 +505,14 @@ public class HootTicketsController {
 	/*
 	 * Logout
 	 */
-	
-	/*@GetMapping("/logoutUser")
-	private String userLogout() {
-		return "LogoutPage";
-	}*/
-	
+
 	@GetMapping("/logoutUser")
-	private RedirectView logoutPage (HttpServletRequest request, HttpServletResponse response) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    if (auth != null){    
-	        new SecurityContextLogoutHandler().logout(request, response, auth);
-	    }
-	    return new RedirectView("/");// para redirigir a la pantalla de login
+	private RedirectView logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return new RedirectView("/");
 	}
 
 }
