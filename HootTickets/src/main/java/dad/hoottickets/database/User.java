@@ -6,14 +6,15 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
 public class User {
 
-	public static final String DEFAULT_USER_ROLE = "User";
-	public static final String SELLER_ROLE = "Seller";
+	public static final String DEFAULT_USER_ROLE = "USER";
+	public static final String SELLER_ROLE = "SELLER";
 
 	@Id
 	protected String userUsername;
@@ -33,7 +34,7 @@ public class User {
 	@OneToMany(mappedBy = "ticketPurchaseUniqueID.user")
 	protected List<TicketPurchase> userTickets = new ArrayList<>();
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	protected List<String> roles = new ArrayList<>();
 
 	public User() {
@@ -46,7 +47,7 @@ public class User {
 		this.userName = userName;
 		this.userSurname = userSurname;
 		this.userPassword = userPassword;
-		this.roles.add(DEFAULT_USER_ROLE);
+		this.roles.add("ROLE_" + DEFAULT_USER_ROLE);
 	}
 
 	/*

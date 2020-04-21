@@ -7,22 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
@@ -83,55 +90,33 @@ public class HootTicketsController {
 
 	@PostConstruct
 	public void init() {
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		Seller madeUpSeller = new Seller("MadeUpSeller", "madeup@seller.com", "MadeUp", "Seller", "MyMadeUpPassword");
-		userRepository.save(madeUpSeller);
 
-		String eventName = "Estopa - GIRA FUEGO";
-		String eventSummary = "Vive la música en directo de Estopa en el WiZink Center de Madrid el próximo viernes 30 de octubre de 2020.";
-		String eventDescription = "Llega GIRA FUEGO la nueva gira de Estopa, donde los hermanos Muñoz celebrarán sus 20 años de carrera musical presentando las canciones de su nuevo disco y recordando sus grande éxitos.";
-		Event event = new Event(eventName, eventSummary, eventDescription, madeUpSeller);
-
-		eventRepository.save(event);
-
-		LocalDateTime date = LocalDateTime.from(dateFormatter.parse("2020-08-30 21:30"));
-		ShowingID showingID = new ShowingID(date, event.getEventName());
-		String showingPlace = "Madrid - Wizing Center";
-		Showing showing = new Showing(showingID, showingPlace, event);
-
-		showingRepository.save(showing);
-
-		String ticketName = "Entrada General Zona Inflamable";
-		TicketID ticketID = new TicketID(ticketName, showing);
-		int ticketPrice = 75;
-		int ticketTotalSeats = 100;
-		Ticket ticket = new Ticket(ticketID, ticketPrice, ticketTotalSeats);
-
-		String ticketName_2 = "Entrada Grada";
-		TicketID ticketID_2 = new TicketID(ticketName_2, showing);
-		int ticketPrice_2 = 46;
-		int ticketTotalSeats_2 = 200;
-		Ticket ticket_2 = new Ticket(ticketID_2, ticketPrice_2, ticketTotalSeats_2);
-
-		String ticketName_3 = "Entrada Persona Movilidad Reducida";
-		TicketID ticketID_3 = new TicketID(ticketName_3, showing);
-		int ticketPrice_3 = 36;
-		int ticketTotalSeats_3 = 20;
-		Ticket ticket_3 = new Ticket(ticketID_3, ticketPrice_3, ticketTotalSeats_3);
-
-		ticketRepository.save(ticket);
-		ticketRepository.save(ticket_2);
-		ticketRepository.save(ticket_3);
 	}
 
-	private void updateHTTPSession(HttpSession httpSession) {
+	private void updateHTTPSession(HttpSession httpSession, HttpServletRequest request, HttpServletResponse response) {
+		httpSession.setMaxInactiveInterval(60);
 		if (httpSession.isNew()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			new SecurityContextLogoutHandler().logout(request, response, auth);
 			session.resetSession();
 		}
 	}
 
 	@RequestMapping("/")
-	private String home(Model model, HttpServletRequest request) {
+	private String home(Model model, HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
+		updateHTTPSession(httpSession, request, response);
+		
+		Principal userLoggedIn = request.getUserPrincipal();
+		if (userLoggedIn != null && !session.hasLoggedIn()) {
+			String username = userLoggedIn.getName();
+			User user = userRepository.findByUserUsername(username);
+			try {
+				session.logIn(user);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		List<Event> eventsList = eventRepository.findAll();
 
 		if (session.hasLoggedIn()) {
@@ -450,13 +435,12 @@ public class HootTicketsController {
 				: new User(username, email, username, surname, password);
 
 		userRepository.save(newUser);
-		try {
-			session.logIn(newUser);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		return new RedirectView("/registerUser/success");
+	}
 
-		return new RedirectView("/");
+	@GetMapping("/registerUser/success")
+	private String userRegistration() {
+		return "RegistrationSuccess";
 	}
 
 	/*
@@ -494,7 +478,7 @@ public class HootTicketsController {
 	 */
 	private String loginErrorMessage = null;
 
-	@RequestMapping("/loginUser")
+	@GetMapping("/loginUser")
 	private String userLogin(Model model, HttpServletRequest request) {
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 
@@ -504,21 +488,10 @@ public class HootTicketsController {
 		return LoginPage.TEMPLATE_NAME;
 	}
 
-	@PostMapping("/loginUser/sendData")
-	private RedirectView receiveUserData(@RequestParam String username, @RequestParam String password) {
-		loginErrorMessage = null;
-
+	@GetMapping("/loginUser/success")
+	private RedirectView userLoginSuccess(HttpServletRequest request) {
+		String username = request.getUserPrincipal().getName();
 		User user = userRepository.findByUserUsername(username);
-		if (user == null) {
-			loginErrorMessage = "Username provided not found in database";
-			return new RedirectView("/loginUser");
-		}
-
-		String userPassword = user.getUserPassword();
-		if (!new BCryptPasswordEncoder().matches(password, user.getUserPassword())) {
-			loginErrorMessage = "User or password are wrong";
-			return new RedirectView("/loginUser");
-		}
 
 		try {
 			session.logIn(user);
@@ -533,12 +506,11 @@ public class HootTicketsController {
 	 * Logout
 	 */
 
-	@RequestMapping("/logoutUser")
-	private RedirectView userLogout() {
-		try {
-			session.logOut();
-		} catch (Exception e) {
-			e.printStackTrace();
+	@GetMapping("/logoutUser")
+	private RedirectView logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
 		return new RedirectView("/");
 	}

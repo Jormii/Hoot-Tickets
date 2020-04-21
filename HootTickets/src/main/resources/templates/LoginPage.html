@@ -9,7 +9,7 @@
 	<h5>{{errorMessage}}</h5>
 	{{/errorMessage}}
 	
-	<form action="/loginUser/sendData" method="post">
+	<form action="/loginUser" method="post">
 		<input type="hidden" name="_csrf" value="{{token}}"/>
 		<label>Enter your username: *</label>
 		<input type="text" name="username" required="required">
