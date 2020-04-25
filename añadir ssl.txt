@@ -16,10 +16,11 @@ frontend front_app
 	mode http
 	default_backend back_app
 backend back_app
+	mode http
 	stats enable
 	stats uri /haproxy?stats
 	balance roundrobin
 	option httpclose
-	optionforwardfor
+	option forwardfor
 	server web1 localhost:8080 check
 	server web2 localhost:8081 check
