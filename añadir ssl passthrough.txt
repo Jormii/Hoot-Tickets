@@ -20,7 +20,7 @@ backend back_app
 	mode tcp
 	balance roundrobin
 	option ssl-hello-chk
-	server web1 localhost:8080 check
+	server web1 localhost:8443 check
 	server web2 localhost:8081 check
 listen stats
 	bind *:1936
