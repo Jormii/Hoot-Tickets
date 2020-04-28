@@ -12,26 +12,25 @@ services:
   container_name: queue
   image: rabbitmq
 
+ load_balancer:
+  container_name: load_balancer
+  build: ./Haproxy/
+  ports:
+   - "443:443"
+   - "1936:1936"
+  restart: unless-stopped
+
  service:
   container_name: service
   build: ./Service/
-  depends_on:
-   - queue
   links:
    - queue
   restart: unless-stopped
 
  site:
-  container_name: site
   build: ./Site/
   environment:
    SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/test?&serverTimezone=UTC
-  ports:
-   - "5000:8443"
-  depends_on:
-   - database
-   - queue
-   - service
   links:
    - database
    - queue
