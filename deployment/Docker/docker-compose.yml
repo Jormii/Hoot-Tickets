@@ -1,12 +1,25 @@
 version: "3"
 
-services:
+services: 
  database:
   container_name: database
   image: mysql
   environment:
    - MYSQL_ROOT_PASSWORD=hoottickets
    - MYSQL_DATABASE=test
+
+ queue:
+  container_name: queue
+  image: rabbitmq
+
+ service:
+  container_name: service
+  build: ./Service/
+  depends_on:
+   - queue
+  links:
+   - queue
+  restart: unless-stopped
 
  site:
   container_name: site
@@ -15,5 +28,11 @@ services:
    SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/test?&serverTimezone=UTC
   ports:
    - "5000:8443"
+  depends_on:
+   - database
+   - queue
+   - service
   links:
    - database
+   - queue
+  restart: unless-stopped
