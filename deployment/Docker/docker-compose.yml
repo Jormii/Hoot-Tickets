@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+ database:
+  container_name: database
+  image: mysql
+  environment:
+   - MYSQL_ROOT_PASSWORD=hoottickets
+   - MYSQL_DATABASE=test
+
+ site:
+  container_name: site
+  build: ./Site/
+  environment:
+   SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/test?&serverTimezone=UTC
+  ports:
+   - "5000:8443"
+  links:
+   - database
