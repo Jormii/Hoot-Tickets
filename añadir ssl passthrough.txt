@@ -1,0 +1,28 @@
+#actualizamos haproxy a su version 1.7 para disponer de ssl
+sudo add-apt-repository ppa:vbernat/haproxy-1.7
+sudo apt update
+sudo apt install -y haproxy
+#creamos el certificado ssl
+sudo mkdir /etc/ssl/xip.io
+sudo openssl genrsa -out /etc/ssl/xip.io/xip.io.key 1024
+sudo openssl req -new -key /etc/ssl/xip.io/xip.io.key \-out /etc/ssl/xip.io/xip.io.csr
+#rellenamos los campos con cualquier dato
+sudo openssl x509 -req -days 365 -in /etc/ssl/xip.io/xip.io.csr \-signkey /etc/ssl/xip.io/xip.io.key \-out /etc/ssl/xip.io/xip.io.crt
+sudo cat /etc/ssl/xip.io/xip.io.crt /etc/ssl/xip.io/xip.io.key \| sudo tee /etc/ssl/xip.io/xip.io.pem
+#añadimos al /etc/haproxy/haproxy.cfg lo sig:
+frontend front_app
+	bind *:80
+	bind *:443
+	mode tcp
+	option tcplog
+	default_backend back_app
+backend back_app
+	mode tcp
+	balance roundrobin
+	option ssl-hello-chk
+	server web1 localhost:8443 check
+	server web2 localhost:8081 check
+listen stats
+	bind *:1936
+	mode http
+	stats enable
