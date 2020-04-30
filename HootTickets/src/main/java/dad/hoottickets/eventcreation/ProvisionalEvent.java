@@ -1,10 +1,13 @@
 package dad.hoottickets.eventcreation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProvisionalEvent {
+public class ProvisionalEvent implements Serializable {
 
+	private static final long serialVersionUID = 1544989758727718203L;
+	
 	private String eventName;
 	private String eventSummary;
 	private String eventDescription;

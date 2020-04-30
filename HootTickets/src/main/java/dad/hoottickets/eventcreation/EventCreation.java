@@ -1,12 +1,15 @@
 package dad.hoottickets.eventcreation;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 @Service
-public class EventCreation {
+public class EventCreation implements Serializable {
 
+	private static final long serialVersionUID = 3195744999674062755L;
+	
 	private ProvisionalEvent provisionalEvent;
 
 	public void startEventCreation(ProvisionalEvent event) {

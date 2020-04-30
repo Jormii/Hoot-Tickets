@@ -1,5 +1,7 @@
 package dad.hoottickets;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -9,8 +11,10 @@ import dad.hoottickets.eventcreation.EventCreation;
 
 @Component
 @SessionScope
-public class ClientSession {
+public class ClientSession implements Serializable {
 
+	private static final long serialVersionUID = -2182657457972261580L;
+	
 	private User user;
 	private boolean loggedIn;
 	private boolean isSeller;
