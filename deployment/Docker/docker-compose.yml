@@ -21,7 +21,6 @@ services:
   restart: unless-stopped
 
  service:
-  container_name: service
   build: ./Service/
   links:
    - queue
