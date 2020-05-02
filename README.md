@@ -2,6 +2,8 @@
 
 ## Índice
 - [Introducción](#introduccion)
+- [Vídeo de demostración](#video)
+- [Despliegue de la aplicación](#despliegue)
 - [Descripción de la página](#descripcion)
   - [Tipos de usuario](#usuarios)
   - [Funcionalidad](#funcionalidad)
@@ -11,7 +13,6 @@
 - [Diagrama de navegación](#navegacion)
 - [Diagrama de clases](#clases)
 - [Diagrama Entidad-Relación](#diagramaER)
-- [Despliegue de la máquina virtual](#despliegueVM)
 - [Capturas de pantalla](#capturas)
   - [Página principal](#capturasPrincipal)
   - [Proceso de compra](#capturasCompra)
@@ -22,6 +23,17 @@
 
 ## Introducción<a name="introduccion"></a>
 Hoot Tickets es una página para la compra y venta de entradas de eventos musicales.
+
+## Vídeo de demostración<a name="video"></a>
+**TODO**
+
+## Despliegue de la aplicación<a name="despliegue"></a>
+Para el despliegue se han utilizado Docker y Docker Compose. En la [última release](https://github.com/Jormii/Hoot-Tickets/releases) se puede encontrar un .zip llamado "deployment" que incluye los ficheros necesarios para arrancar la aplicación. Entre todos los ficheros se puede encontrar uno llamado "run_docker.sh". Basta con ejecutar este fichero para poner en marcha la aplicación. Este fichero pone en marcha:
+- Dos contenedores con la imagen de la aplicación.
+- Dos contenedores con la imagen del servicio interno.
+- Un contenedor con un balanceador de carga Haproxy.
+- Un contenedor con una base de datos MySQL.
+- Un contenedor con una instancia de RabbitMQ.
 
 ## Descripción de la página<a name="descripcion"></a>
 ### Tipos de usuario<a name="usuarios"></a>
@@ -70,45 +82,6 @@ Yolanda Gómez Henche | y.gomezh@alumnos.urjc.es | https://github.com/yolandagom
 ## Diagrama Entidad-Relación<a name="diagramaER"></a>
 ![alt text](https://i.imgur.com/BNdHln5.jpg "Diagrama ER")
 
-## Despliegue de la máquina virtual<a name="despliegueVM"></a>
-El despliegue se ha hecho utilizando Vagrant ubuntu/trusty32, tal y como se indicaba en las transparencias. A menos que se indique lo contrario. Las siguientes operaciones se realizan conectándose mediante ssh con la máquina virtual.
-
-### Configuración de Java 8
-```
-sudo add-apt-repository ppa:openjdk-r/ppa
-sudo apt-get update
-sudo apt-get install openjdk-8-jre
-```
-
-### Configuración de MySQL
-La contraseña del usuario root será "hoottickets".
-```
-sudo apt-get install mysql-server
-mysql -u root -p
-	mysql> CREATE DATABASE test;
-```
-
-### Configuración de RabbitMQ
-```
-wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install rabbitmq-server
-```
-
-### Ejecución
-Moviendo los ficheros .jar del sitio web y del servicio a la carpeta donde se encuentra el Vagrantfile y desde la consola del host:
-```
-vagrant upload ./Site.jar
-vagrant upload ./Service.jar
-```
-
-Ahora hay que abrir un segundo terminal para poder ejecutar ambos .jar. Después de comunicarse con la máquina virtual con
-```vagrant ssh```, en terminales distintos:
-```
-java -jar ./Service.jar
-java -jar ./Site.jar
-```
-
 ## Capturas de pantalla<a name="capturas"></a>
 ### Página principal<a name="capturasPrincipal"></a>
 ![alt text](https://i.imgur.com/9LXmk4e.png "Página principal sin haber iniciado sesión")
@@ -146,7 +119,7 @@ Permite crear nuevas sesiones y entradas.
 Pregunta por los campos necesarios para crear una sesión.
 
 ##### Creación de entrada
-![ælt text](https://i.imgur.com/H8VCZFO.png "Creación de entrada")
+![alt text](https://i.imgur.com/H8VCZFO.png "Creación de entrada")
 Pregunta por los campos necesarios para crear una entrada.
 
 ##### Creación de evento exitosa
