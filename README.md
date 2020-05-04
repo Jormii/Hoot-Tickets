@@ -25,7 +25,7 @@
 Hoot Tickets es una página para la compra y venta de entradas de eventos musicales.
 
 ## Vídeo de demostración<a name="video"></a>
-**TODO**
+https://youtu.be/seIpE-QArDI
 
 ## Despliegue de la aplicación<a name="despliegue"></a>
 Para el despliegue se han utilizado Docker y Docker Compose. En la [última release](https://github.com/Jormii/Hoot-Tickets/releases) se puede encontrar un .zip llamado "deployment" que incluye los ficheros necesarios para arrancar la aplicación. Entre todos los ficheros se puede encontrar uno llamado "run_docker.sh". Basta con ejecutar este fichero para poner en marcha la aplicación. Este fichero pone en marcha:
