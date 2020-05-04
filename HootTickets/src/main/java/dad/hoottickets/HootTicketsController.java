@@ -224,7 +224,7 @@ public class HootTicketsController {
 				ticketRepository.save(ticket);
 
 				ConnectionFactory factory = new ConnectionFactory();
-				factory.setHost("localhost");
+				factory.setHost("queue");
 				Connection connection = factory.newConnection();
 				Channel channel = connection.createChannel();
 				Message_Service message = new Message_Service(email, ticketPurchaseID.toString(), to.get(i),

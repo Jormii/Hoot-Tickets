@@ -51,7 +51,7 @@ public class QRCodeGenerator {
 
 	public static void main(String[] args) throws DocumentException, IOException, TimeoutException {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("localhost");
+		factory.setHost("queue");
 		Connection connection = factory.newConnection();
 		Channel channel = connection.createChannel();
 

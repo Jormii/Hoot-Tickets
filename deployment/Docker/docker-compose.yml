@@ -1,0 +1,36 @@
+version: "3"
+
+services: 
+ database:
+  container_name: database
+  image: mysql
+  environment:
+   - MYSQL_ROOT_PASSWORD=hoottickets
+   - MYSQL_DATABASE=test
+
+ queue:
+  container_name: queue
+  image: rabbitmq
+
+ load_balancer:
+  container_name: load_balancer
+  build: ./Haproxy/
+  ports:
+   - "443:443"
+   - "1936:1936"
+  restart: unless-stopped
+
+ service:
+  build: ./Service/
+  links:
+   - queue
+  restart: unless-stopped
+
+ site:
+  build: ./Site/
+  environment:
+   SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/test?&serverTimezone=UTC
+  links:
+   - database
+   - queue
+  restart: unless-stopped
